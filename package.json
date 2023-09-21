@@ -1,0 +1,29 @@
+{
+  "name": "checkingcurrency",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "lint": "eslint",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "rimraf /dist && tsc -p ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BaseAdam/checkingCurrency.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/BaseAdam/checkingCurrency/issues"
+  },
+  "homepage": "https://github.com/BaseAdam/checkingCurrency#readme",
+  "devDependencies": {
+    "eslint": "^8.49.0",
+    "prettier": "^3.0.3",
+    "typescript": "^5.2.2"
+  },
+  "dependencies": {
+    "rimraf": "^5.0.1"
+  }
+}
