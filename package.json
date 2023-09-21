@@ -4,9 +4,14 @@
   "description": "",
   "main": "main.js",
   "scripts": {
-    "lint": "eslint",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "rimraf /dist && tsc -p ."
+    "prebuild": "rimraf ./dist",
+    "build": "tsc",
+    "format": "prettier --check \"{src,tests}/**/*.{ts,json}\"",
+    "lint": "eslint \"src/**/*.ts\"",
+    "format:fix": "prettier --write \"{src,tests}/**/*.{ts,json}\"",
+    "lint:fix": "eslint \"src/**/*.ts\" --fix",
+    "start": "node ./dist/main.js"
   },
   "repository": {
     "type": "git",
@@ -19,11 +24,14 @@
   },
   "homepage": "https://github.com/BaseAdam/checkingCurrency#readme",
   "devDependencies": {
-    "eslint": "^8.49.0",
-    "prettier": "^3.0.3",
-    "typescript": "^5.2.2"
+    "@types/node": "20.6.3",
+    "@typescript-eslint/eslint-plugin": "6.7.2",
+    "@typescript-eslint/parser": "6.7.2",
+    "eslint": "8.49.0",
+    "eslint-plugin-prettier": "5.0.0",
+    "prettier": "3.0.3",
+    "typescript": "5.2.2",
+    "rimraf": "5.0.1"
   },
-  "dependencies": {
-    "rimraf": "^5.0.1"
-  }
+  "dependencies": {}
 }
