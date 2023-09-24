@@ -1,3 +1,11 @@
-import { abc } from './other'
+import { Application } from './application';
 
-console.log('Hello world!', abc)
+const main = async () => {
+  try {
+    await Application.start();
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+main();
