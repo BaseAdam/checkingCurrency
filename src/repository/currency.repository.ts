@@ -2,11 +2,14 @@ import { readFileSync } from 'fs';
 import { join } from 'path';
 
 export class CurrencyRepository {
-    private readonly currencies;
-  
+    private readonly currencies: String;
+
+
     constructor() {
-      this.currencies = JSON.parse(
-        readFileSync(join(__filename, '..', 'config', 'currencies.json'), 'utf-8')
-      ).currencies;
+      this.currencies = "random"
+    }
+
+    public async getRandom(): Promise<String>{
+      return this.currencies
     }
 }

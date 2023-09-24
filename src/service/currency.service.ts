@@ -7,4 +7,7 @@ export class CurrencyService {
         this.currencyRepository = new CurrencyRepository();
     }
 
+    public async getRandom(): Promise<String>{
+        return this.currencyRepository.getRandom();
+    }
 }

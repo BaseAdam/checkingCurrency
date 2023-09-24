@@ -2,11 +2,11 @@
 
 ### Todo:
 
-- [] Install express
-- [] [Optional] Install and configure nodemon
-- [] Create layer architecture (controllers, services, repositories) (Dummy Controller, Dummy Service, Dummy Repository)
-- [] Create Routes class and configure routes
-- [] Create Application class and configure express
+- [x] Install express
+- [x] [Optional] Install and configure nodemon
+- [x] Create layer architecture (controllers, services, repositories) (Dummy Controller, Dummy Service, Dummy Repository)
+- [x] Create Routes class and configure routes
+- [x] Create Application class and configure express
 
 ---
 
