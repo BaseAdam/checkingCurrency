@@ -8,8 +8,8 @@ export class CurrencyController {
     this.currencyService = new CurrencyService();
   }
 
-  public async getRandom(req: Request, res: Response): Promise<void> {
-    const random = await this.currencyService.getRandom();
-    res.status(200).send(random);
+  public async getAllCurrencies(req: Request, res: Response): Promise<void> {
+    const currencies = await this.currencyService.getAllCurrencies();
+    res.send(currencies);
   }
 }

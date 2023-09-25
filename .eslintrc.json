@@ -19,7 +19,13 @@
   "ignorePatterns": ["**/dist"],
   "plugins": ["@typescript-eslint"],
   "rules": {
-    "@typescript-eslint/naming-convention": "error",
+    "@typescript-eslint/naming-convention": [
+      "error",
+      {
+        "selector": "variable",
+        "format": ["camelCase"]
+      }
+    ],
     "@typescript-eslint/explicit-member-accessibility": [
       "error",
       {

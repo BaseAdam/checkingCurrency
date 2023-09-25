@@ -1,4 +1,5 @@
 import { CurrencyRepository } from '../repository/currency.repository';
+import { Currency } from '../repository/currency.repository';
 
 export class CurrencyService {
   private readonly currencyRepository: CurrencyRepository;
@@ -7,7 +8,7 @@ export class CurrencyService {
     this.currencyRepository = new CurrencyRepository();
   }
 
-  public async getRandom(): Promise<string> {
-    return this.currencyRepository.getRandom();
+  public async getAllCurrencies(): Promise<Currency> {
+    return this.currencyRepository.getAllCurrencies();
   }
 }
