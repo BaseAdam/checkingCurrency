@@ -8,14 +8,14 @@ export class Application {
     private readonly CurrencyController: CurrencyController;
 
     
-  private constructor(
+  private constructor (
     private readonly app: express.Express,
     private readonly server: Server
-  ) {
+  ){
     this.CurrencyController = new CurrencyController();
-    this.app.get("/api/random", (req, res) => 
-        this.CurrencyController.getRandom(req, res)
-        );
+    this.app.get("/api/currencies/:currency", (req, res) => {
+      this.CurrencyController.getCurrencyComparison(req, res)
+    });
   }
 
     public static async start(): Promise<Application> {

@@ -7,7 +7,7 @@ export class CurrencyService {
         this.currencyRepository = new CurrencyRepository();
     }
 
-    public async getRandom(): Promise<String>{
-        return this.currencyRepository.getRandom();
+    public async getCurrencyComparison(currency: String, currencyToCompare: String): Promise<Object | undefined> {
+        return this.currencyRepository.getCurrencyComparison(currency, currencyToCompare);
     }
 }
