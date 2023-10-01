@@ -18,5 +18,7 @@
   },
   "ignorePatterns": ["**/dist"],
   "plugins": ["@typescript-eslint"],
-  "rules": {}
+  "rules": {
+    "@typescript-eslint/naming-convention": "error"
+  }
 }
