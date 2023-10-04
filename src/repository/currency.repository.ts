@@ -1,18 +1,22 @@
 import { readFileSync } from 'fs';
 import { join } from 'path';
 
-export type Currency = {
+export enum Currency {
+  USD = 'USD',
+  PLN = 'PLN',
+  EUR = 'EUR',
+  GBP = 'GBP',
+  CHF = 'CHF',
+}
+
+export type Currencies = {
   currencies: {
-    USD: Object;
-    PLN: Object;
-    EUR: Object;
-    GBP: Object;
-    CHF: Object;
+    [outerKey in Currency]: Record<Currency, number>;
   };
 };
 
 export class CurrencyRepository {
-  private readonly currencies: Currency;
+  private readonly currencies: Currencies;
 
   constructor() {
     this.currencies = JSON.parse(
@@ -23,7 +27,7 @@ export class CurrencyRepository {
     ).currencies;
   }
 
-  public async getAllCurrencies(): Promise<Currency> {
-    return this.currencies;
+  public async getAllCurrencies(): Promise<Currency[]> {
+    return Object.values(Currency);
   }
 }

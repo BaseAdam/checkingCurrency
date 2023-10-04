@@ -11,8 +11,8 @@ export class Routes {
   public registerCurrencyRoutes(): Router {
     const router = Router();
 
-    router.get('/random', (req, res) =>
-      this.currencyController.getRandom(req, res)
+    router.get('/currency', (req, res) =>
+      this.currencyController.getAllCurrencies(req, res)
     );
 
     return router;
