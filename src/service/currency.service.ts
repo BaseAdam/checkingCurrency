@@ -1,5 +1,7 @@
-import { CurrencyRepository } from '../repository/currency.repository';
-import { Currency } from '../repository/currency.repository';
+import {
+  Currency,
+  CurrencyRepository,
+} from '../repository/currency.repository';
 
 export class CurrencyService {
   private readonly currencyRepository: CurrencyRepository;
@@ -8,7 +10,7 @@ export class CurrencyService {
     this.currencyRepository = new CurrencyRepository();
   }
 
-  public async getAllCurrencies(): Promise<Currency> {
+  public async getAllCurrencies(): Promise<Currency[]> {
     return this.currencyRepository.getAllCurrencies();
   }
 }
