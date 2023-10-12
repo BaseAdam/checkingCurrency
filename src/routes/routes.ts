@@ -1,14 +1,16 @@
-import { Router } from 'express';
+import express from 'express';
 import { CurrencyController } from '../controller/currency.controller';
 
-export const router = Router()
+export const router = express.Router()
 
 export class Routes {
     private readonly currencyController: CurrencyController;
 
     constructor() {
         this.currencyController = new CurrencyController();
-        router.get("/", (req, res) => 
+    }
+    public registerRoutes() {
+        router.get("/random", (req, res) => 
             this.currencyController.getRandom(req, res));
     }
     
