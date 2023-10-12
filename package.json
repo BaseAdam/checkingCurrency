@@ -6,13 +6,15 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "prebuild": "rimraf ./dist",
-    "build": "tsc",
+    "build": "copyfiles -u 1 ./src/config/*.json ./dist && tsc",
     "format": "prettier --check \"{src,tests}/**/*.{ts,json}\"",
     "lint": "eslint \"src/**/*.ts\"",
     "format:fix": "prettier --write \"{src,tests}/**/*.{ts,json}\"",
     "lint:fix": "eslint \"src/**/*.ts\" --fix",
     "start": "node ./dist/main.js",
-    "dev": "nodemon ./dist/main.js"
+    "dev": "nodemon ./src/main.ts",
+    "watch": "src",
+    "ext": "ts,json"
   },
   "repository": {
     "type": "git",
