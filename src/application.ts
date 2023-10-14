@@ -10,9 +10,9 @@ export class Application {
     private readonly app: express.Express,
     private readonly server: Server
   ) {
-      this.routes = new Routes()
-      this.routes.registerRoutes()
-      app.use("/api", router)
+    this.routes = new Routes();
+    const currencyRouter = this.routes.registerCurrencyRoutes();
+    app.use('/api', currencyRouter);
   }
 
     public static async start(): Promise<Application> {
