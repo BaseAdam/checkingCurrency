@@ -1,14 +1,12 @@
 import { Router } from 'express';
 import { CurrencyController } from '../controller/currency.controller';
 
-export const router = express.Router()
-
 export class Routes {
-    private readonly currencyController: CurrencyController;
+  private readonly currencyController: CurrencyController;
 
-    constructor() {
-        this.currencyController = new CurrencyController();
-    }
+  constructor() {
+    this.currencyController = new CurrencyController();
+  }
 
   public registerCurrencyRoutes(): Router {
     const router = Router();
@@ -19,5 +17,4 @@ export class Routes {
 
     return router;
   }
-}
 }
