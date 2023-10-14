@@ -1,11 +1,11 @@
 export class CurrencyRepository {
-    private readonly currencies: String;
+  private readonly currencies: string;
 
-    constructor() {
-      this.currencies = "random"
-    }
+  constructor() {
+    this.currencies = 'random';
+  }
 
-    public async getRandom(): Promise<String> {
-      return this.currencies
-    }
+  public async getRandom(): Promise<string> {
+    return this.currencies;
+  }
 }

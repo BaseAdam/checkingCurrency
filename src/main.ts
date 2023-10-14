@@ -1,6 +1,6 @@
 import { Application } from './application';
 
-const main = async () => {
+const main = async (): Promise<void> => {
   try {
     await Application.start();
   } catch (error) {
