@@ -28,18 +28,16 @@ export class CurrencyRepository {
   }
 
     public async getCurrencyComparison(currency: String, currencyToCompare: String): Promise<Object | undefined> {
-      return this.currencies
-    }
-    //   const currencyEntries = Object.entries(this.currencies)
+      const currencyEntries = Object.entries(this.currencies)
 
-    //   if (currency !== currencyToCompare) {
-    //     const chosenCurrency = currencyEntries.find(([key]) => key === currency)
-    //     const exchangeRate = chosenCurrency ? Object.entries(chosenCurrency[1]).find(([value]) => value === currencyToCompare) : currencyEntries
-    //     return {currency, exchangeRate}
-    //   }
-    //   else {
-    //     return "Currencies to compare are the same, change one of them"
-    //   }
-    // }
+      if (currency !== currencyToCompare) {
+        const chosenCurrency = currencyEntries.find(([key]) => key === currency)
+        const exchangeRate = chosenCurrency ? Object.entries(chosenCurrency[1]).find(([value]) => value === currencyToCompare) : "Currency not found"
+        return {currency, exchangeRate}
+      }
+      else {
+        return "Currencies to compare are the same, change one of them"
+      }
+    }
 }
 
