@@ -14,7 +14,20 @@ export type Currencies = {
     [outerKey in Currency]: Record<Currency, number>;
   };
 };
-
+export const validateCurrency = (
+  currency: string | undefined,
+  currencyToCompare: string | undefined
+): string | undefined => {
+  if (
+    currency !== currencyToCompare &&
+    Object.keys(Currency).find((key) => key === currency) &&
+    Object.keys(Currency).find((value) => value === currencyToCompare)
+  ) {
+    return currency, currencyToCompare;
+  } else {
+    throw new Error("Type correct currencies");
+  }
+};
 export class CurrencyRepository {
   private readonly currencies: Currencies;
 
@@ -24,17 +37,12 @@ export class CurrencyRepository {
     ).currencies;
   }
 
-  public async getCurrencyComparison(currency: string, currencyToCompare: string): Promise<object | undefined | string> {
+  public async getCurrencyComparison(currency: string, currencyToCompare: string): Promise<object | undefined> {
     const currencyEntries = Object.entries(this.currencies);
-
-    if (currency !== currencyToCompare) {
-      const chosenCurrency = currencyEntries.find(([key]) => key === currency);
-      const exchangeRate = chosenCurrency
-        ? Object.entries(chosenCurrency[1]).find(([value]) => value === currencyToCompare)
-        : "Currency not found";
+    const chosenCurrency = currencyEntries.find(([key]) => key === currency);
+    if (chosenCurrency) {
+      const exchangeRate = Object.entries(chosenCurrency[1]).find(([value]) => value === currencyToCompare);
       return { currency, exchangeRate };
-    } else {
-      return "Currencies to compare are the same, change one of them";
     }
   }
 }
