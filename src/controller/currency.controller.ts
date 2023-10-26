@@ -4,8 +4,8 @@ import { CurrencyService } from '../service/currency.service';
 export class CurrencyController {
   private readonly currencyService: CurrencyService;
 
-  constructor() {
-    this.currencyService = new CurrencyService();
+  constructor(currencyService: CurrencyService) {
+    this.currencyService = currencyService;
   }
 
   public async getAllCurrencies(req: Request, res: Response): Promise<void> {
