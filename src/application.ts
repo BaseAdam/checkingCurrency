@@ -28,4 +28,8 @@ export class Application {
 
     return new Application(app, server);
   }
+
+  public async stop(): Promise<void> {
+    this.server.close();
+  }
 }
