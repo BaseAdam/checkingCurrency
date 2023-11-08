@@ -1,5 +1,5 @@
 import { readFileSync } from 'fs';
-import { join } from 'path';
+import { Config } from '../config/config';
 
 export enum Currency {
   USD = 'USD',
@@ -18,12 +18,9 @@ export type Currencies = {
 export class CurrencyRepository {
   private readonly currencies: Currencies;
 
-  constructor() {
+  constructor(private readonly config: Config) {
     this.currencies = JSON.parse(
-      readFileSync(
-        join(__filename, '..', '..', 'config', 'currencies.json'),
-        'utf-8'
-      )
+      readFileSync(this.config.getCurrenciesPath(), 'utf-8')
     ).currencies;
   }
 
