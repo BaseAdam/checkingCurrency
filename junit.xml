@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="jest tests" tests="2" failures="2" errors="0" time="2.166">
+  <testsuite name="currency service - unit test" errors="0" failures="1" skipped="0" timestamp="2023-11-06T21:59:27" time="1.606" tests="1">
+    <testcase classname="currency service - unit test should return all currencies" name="currency service - unit test should return all currencies" time="0.016">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+- Expected  - 4
++ Received  + 2
+
+  Array [
+-   &quot;ETH&quot;,
+-   &quot;BTC&quot;,
+-   &quot;RVN&quot;,
+-   &quot;USDT&quot;,
++   &quot;USD&quot;,
++   &quot;PLN&quot;,
+  ]
+    at Object.&lt;anonymous&gt; (C:\Users\adamf\Desktop\projects\checkingCurrency\src\service\currency.service.test.ts:25:28)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)</failure>
+    </testcase>
+  </testsuite>
+  <testsuite name="currency repository - unit test" errors="0" failures="1" skipped="0" timestamp="2023-11-06T21:59:27" time="1.612" tests="1">
+    <testcase classname="currency repository - unit test should return all currencies" name="currency repository - unit test should return all currencies" time="0.014">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+- Expected  - 4
++ Received  + 2
+
+  Array [
+-   &quot;ETH&quot;,
+-   &quot;BTC&quot;,
+-   &quot;RVN&quot;,
+-   &quot;USDT&quot;,
++   &quot;CHF&quot;,
++   &quot;EUR&quot;,
+  ]
+    at Object.&lt;anonymous&gt; (C:\Users\adamf\Desktop\projects\checkingCurrency\src\repository\currency.repository.test.ts:17:28)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)</failure>
+    </testcase>
+  </testsuite>
+</testsuites>
