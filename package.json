@@ -4,7 +4,8 @@
   "description": "",
   "main": "main.js",
   "scripts": {
-    "test": "jest",
+    "test": "npm run test:unit && npm run test:integration && npm run test:e2e",
+    "test:e2e": "jest --testMatch \"**/test/e2e/**/*.e2e.spec.ts\"",
     "prebuild": "rimraf ./dist",
     "build": "copyfiles -u 1 ./src/config/*.json ./dist && tsc",
     "format": "prettier --check \"{src,tests}/**/*.{ts,json}\"",
