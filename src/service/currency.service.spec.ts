@@ -17,13 +17,15 @@ describe('currency service - unit test', () => {
 
   it('should return all currencies', async () => {
     // given
-    const cryptoCurrency = [Currency.USD, Currency.PLN];
-    when(currencyRepositoryMock.getAllCurrencies()).thenResolve(cryptoCurrency);
+    const testedCurrencies = [Currency.USD, Currency.PLN];
+    when(currencyRepositoryMock.getAllCurrencies()).thenResolve(
+      testedCurrencies
+    );
 
     // when
-    const testCurrencies = await currencyService.getAllCurrencies();
+    const result = await currencyService.getAllCurrencies();
 
     // then
-    expect(testCurrencies).toEqual(cryptoCurrency);
+    expect(result).toEqual(testedCurrencies);
   });
 });
