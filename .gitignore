@@ -37,4 +37,4 @@ testem.log
 Thumbs.db
  
 # Tests
-.junit.xml
+/junit.xml
