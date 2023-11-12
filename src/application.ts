@@ -2,6 +2,10 @@ import express from 'express';
 import { Server } from 'http';
 import * as path from 'path';
 import { Routes } from './routes/routes';
+import { CurrencyController } from './controller/currency.controller';
+import { CurrencyService } from './service/currency.service';
+import { CurrencyRepository } from './repository/currency.repository';
+import { Config } from './config/config';
 
 export class Application {
   private readonly routes: Routes;
@@ -10,7 +14,11 @@ export class Application {
     private readonly app: express.Express,
     private readonly server: Server
   ) {
-    this.routes = new Routes();
+    this.routes = new Routes(
+      new CurrencyController(
+        new CurrencyService(new CurrencyRepository(new Config()))
+      )
+    );
     const currencyRouter = this.routes.registerCurrencyRoutes();
     app.use('/api', currencyRouter);
   }
