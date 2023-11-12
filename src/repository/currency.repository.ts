@@ -1,5 +1,5 @@
 import { readFileSync } from "fs";
-import { join } from "path";
+import { Config } from "../config/config";
 
 export enum Currency {
   USD = "USD",
@@ -14,10 +14,7 @@ export type Currencies = {
     [outerKey in Currency]: Record<Currency, number>;
   };
 };
-export const validateCurrency = (
-  currency: string | undefined,
-  currencyToCompare: string | undefined
-): string | undefined => {
+export const validateCurrency = (currency: string | undefined, currencyToCompare: string | undefined): string | undefined => {
   if (
     currency !== currencyToCompare &&
     Object.keys(Currency).find((key) => key === currency) &&
@@ -31,10 +28,8 @@ export const validateCurrency = (
 export class CurrencyRepository {
   private readonly currencies: Currencies;
 
-  constructor() {
-    this.currencies = JSON.parse(
-      readFileSync(join(__filename, "..", "..", "config", "currencies.json"), "utf-8")
-    ).currencies;
+  constructor(private readonly config: Config) {
+    this.currencies = JSON.parse(readFileSync(this.config.getCurrenciesPath(), "utf-8")).currencies;
   }
 
   public async getCurrencyComparison(currency: string, currencyToCompare: string): Promise<object | undefined> {

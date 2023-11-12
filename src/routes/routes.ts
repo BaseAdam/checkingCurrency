@@ -7,9 +7,9 @@ export class Routes {
   private readonly currencyController: CurrencyController;
   private readonly validationMiddleware: ValidationMiddleware;
 
-  constructor() {
-    this.currencyController = new CurrencyController();
-    this.validationMiddleware = new ValidationMiddleware();
+  constructor(currencyController: CurrencyController, validationMiddleware: ValidationMiddleware) {
+    this.currencyController = currencyController;
+    this.validationMiddleware = validationMiddleware;
   }
   public registerRoutes(): Router {
     const router = Router();

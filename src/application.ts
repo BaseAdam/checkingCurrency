@@ -9,7 +9,7 @@ export class Application {
     private readonly app: express.Express,
     private readonly server: Server
   ) {
-    this.routes = new Routes();
+    this.routes = new Routes()
     const currencyRouter = this.routes.registerRoutes();
     app.use("/api", currencyRouter);
   }
