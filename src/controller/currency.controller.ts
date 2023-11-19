@@ -12,4 +12,10 @@ export class CurrencyController {
     const currencies = await this.currencyService.getAllCurrencies();
     res.send(currencies);
   }
+
+  public async getCurrencyChangeRate(req: Request, res: Response): Promise<void> {
+    const currency = String(req.params.currency);
+    const currencyChangeRate = await this.currencyService.getCurrencyChangeRate(currency);
+    res.send(currencyChangeRate);
+  }
 }
