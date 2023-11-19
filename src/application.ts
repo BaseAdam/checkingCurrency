@@ -13,7 +13,7 @@ export class Application {
 
   private constructor(
     private readonly app: express.Express,
-    private readonly server: Server
+    private readonly server: Server,
   ) {
     this.routes = new Routes(new CurrencyController(new CurrencyService(new CurrencyRepository(new Config()))), new ValidationMiddleware());
     const currencyRouter = this.routes.registerRoutes();

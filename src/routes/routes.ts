@@ -6,7 +6,7 @@ import { Router } from 'express';
 export class Routes {
   constructor(
     private readonly currencyController: CurrencyController,
-    private readonly validationController: ValidationMiddleware
+    private readonly validationController: ValidationMiddleware,
   ) {}
   public registerRoutes(): Router {
     const router = Router();
@@ -17,7 +17,7 @@ export class Routes {
       (req, res, next) => this.validationController.getMiddleware(validateCurrency)(req, res, next),
       (req, res) => {
         this.currencyController.getCurrencyChangeRate(req, res);
-      }
+      },
     );
 
     return router;
