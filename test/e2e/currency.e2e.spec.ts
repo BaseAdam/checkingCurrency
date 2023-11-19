@@ -21,4 +21,11 @@ describe('Currency E2E Test', () => {
     // then
     expect(result).toEqual(['USD', 'PLN', 'EUR', 'GBP', 'CHF']);
   });
+  it('should return exchange rate of a given currency', async () => {
+    // when
+    const result = await apiCalls.getExchangeRate();
+
+    // then
+    expect(result).toEqual(['USD', { CHF: 0.99, EUR: 0.89, GBP: 0.79, PLN: 3.77 }]);
+  });
 });
