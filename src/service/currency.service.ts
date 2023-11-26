@@ -12,7 +12,7 @@ export class CurrencyService {
     return this.currencyRepository.getAllCurrencies();
   }
 
-  public async getCurrencyChangeRate(currency: string): Promise<ExchangeRate | undefined> {
+  public async getCurrencyChangeRate(currency: string): Promise<ExchangeRate[]> {
     return this.currencyRepository.getCurrencyChangeRate(currency);
   }
 }
