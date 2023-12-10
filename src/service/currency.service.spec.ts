@@ -27,18 +27,11 @@ describe('currency service - unit test', () => {
   it('should return rates of given currency', async () => {
     // given
     const mainCurrency = 'USD';
-    const exchangeRate: ExchangeRate = [
-      mainCurrency,
-      {
-        rates: {
-          [Currency.PLN]: 2.31,
-          [Currency.EUR]: 2.31,
-          [Currency.CHF]: 2.31,
-          [Currency.USD]: 0,
-          [Currency.GBP]: 1.23,
-        },
-      },
+    const exchangeRate: ExchangeRate[] = [
+      { currency: Currency.PLN, exchangeRate: 3.77 },
+      { currency: Currency.EUR, exchangeRate: 0.89 },
     ];
+
     when(currencyRepositoryMock.getCurrencyChangeRate(mainCurrency)).thenResolve(exchangeRate);
 
     // when

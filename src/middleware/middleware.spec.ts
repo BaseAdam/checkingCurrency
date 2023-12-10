@@ -1,52 +1,57 @@
 import { NextFunction, Request, Response } from 'express';
-import { when, mock } from 'ts-mockito';
-import { ValidationMiddleware } from './middleware';
-import { validateCurrency } from '../repository/currency.repository';
+import { ValidationMiddleware, ValidationMiddlewareFunc } from './middleware';
 
 describe('validation middleware - unit test', () => {
   let req: Request;
   let validationMiddleware: ValidationMiddleware;
+  let mockValidate: ValidationMiddlewareFunc;
   let res: Response;
-  let next: NextFunction;
+  let nextMock: NextFunction;
 
   beforeEach(() => {
+    // res = {
+    //   status: (_arg: number) => {
+    //     return {
+    //       send: (_body?: unknown): void => {},
+    //     };
+    //   },
+    // } as unknown as Response;
     res = {
-      status: jest.fn(() => res),
+      status: jest.fn().mockReturnThis(),
       send: jest.fn(),
     } as unknown as Response;
-    next = jest.fn() as NextFunction;
+    req = {} as Request;
     validationMiddleware = new ValidationMiddleware();
+    nextMock = jest.fn();
+    mockValidate = jest.fn();
   });
 
-  it('should call next() when validation succeeds', () => {
-    //given
-    req = {
-      params: { currency: 'USD' },
-    } as unknown as Request;
-    const validateCurrencyMock = mock(validateCurrency);
-    when(validationMiddleware.getMiddleware(validateCurrencyMock)).thenReturn(next);
-
-    //when
-    validationMiddleware.getMiddleware(validateCurrencyMock)(req, res, next);
-
-    //then
-    expect(next).toHaveBeenCalled();
+  afterEach(() => {
+    // (mockValidate as jest.Mock<ValidationMiddlewareFunc>).mockClear();
+    jest.clearAllMocks();
   });
 
-  it('should return status 400 and throw an error when the validation fails', () => {
-    //given
-    req = {
-      params: { currency: 'Invalid currency' },
-    } as unknown as Request;
-    const validateCurrencyMock = mock(validateCurrency);
-    when(validationMiddleware.getMiddleware(validateCurrencyMock)).thenThrow(new Error());
-
+  it('should call next() when validation succeeds', async () => {
     //when
-    validationMiddleware.getMiddleware(validateCurrencyMock)(req, res, next);
+    await validationMiddleware.getMiddleware(mockValidate)(req, res, nextMock);
 
     //then
+    expect(nextMock).toHaveBeenCalled();
+  });
+
+  it('should send a 400 status when validation throws an error', async () => {
+    //given
+    const error = new Error('Validation error');
+    (mockValidate as jest.Mock<ValidationMiddlewareFunc>).mockImplementationOnce(() => {
+      throw error;
+    });
+
+    // when
+    await validationMiddleware.getMiddleware(mockValidate)(req, res, nextMock);
+
+    //then
+    expect(nextMock).not.toHaveBeenCalled();
     expect(res.status).toHaveBeenCalledWith(400);
-    expect(res.send).toHaveBeenCalledWith('Currency not found');
-    expect(next).not.toHaveBeenCalled();
+    expect(res.send).toHaveBeenCalledWith(error.message);
   });
 });
