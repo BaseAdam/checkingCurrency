@@ -1,6 +1,6 @@
 import { instance, mock, when } from 'ts-mockito';
 import { Config } from '../../src/config/config';
-import { CurrencyRepository, Currency } from '../../src/repository/currency.repository';
+import { CurrencyRepository, Currency, ExchangeRate } from '../../src/repository/currency.repository';
 import { CurrencyService } from '../../src/service/currency.service';
 import { join } from 'path';
 
@@ -41,10 +41,17 @@ describe('Currency Service Integration Test', () => {
     when(configMock.getCurrenciesPath()).thenReturn(join(__filename, '..', '__mocks__', 'valid-currencies.json'));
     const currencyService = new CurrencyService(new CurrencyRepository(instance(configMock)));
 
+    const exchangeRate: ExchangeRate[] = [
+      { currency: Currency.PLN, exchangeRate: 3.77 },
+      { currency: Currency.EUR, exchangeRate: 0.89 },
+      { currency: Currency.GBP, exchangeRate: 0.79 },
+      { currency: Currency.CHF, exchangeRate: 0.99 },
+    ];
+
     // when
     const result = await currencyService.getCurrencyChangeRate(mainCurrency);
 
     // expect Currency array using jest matchers
-    expect(result?.[0]).toEqual(mainCurrency);
+    expect(result).toMatchObject({ exchangeRate });
   });
 });
