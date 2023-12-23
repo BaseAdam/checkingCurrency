@@ -26,7 +26,7 @@ describe('currency service - unit test', () => {
 
   it('should return rates of given currency', async () => {
     // given
-    const mainCurrency = 'USD';
+    const mainCurrency = Currency.USD;
     const exchangeRate: ExchangeRate[] = [
       { currency: Currency.PLN, exchangeRate: 3.77 },
       { currency: Currency.EUR, exchangeRate: 0.89 },

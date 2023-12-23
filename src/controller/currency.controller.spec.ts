@@ -35,17 +35,17 @@ describe('currency controller - unit test', () => {
   it('send exchange rates of given currency', async () => {
     //given
     const mainCurrency = Currency.USD;
-    const exchangeRate: ExchangeRate[] = [
+    const exchangeRates: ExchangeRate[] = [
       { currency: Currency.PLN, exchangeRate: 3.77 },
       { currency: Currency.EUR, exchangeRate: 0.89 },
     ];
 
-    when(currencyServiceMock.getCurrencyChangeRate(mainCurrency)).thenResolve(exchangeRate);
+    when(currencyServiceMock.getCurrencyChangeRate(mainCurrency)).thenResolve(exchangeRates);
 
     //when
     await currencyController.getCurrencyChangeRate(req, res);
 
     //then
-    expect(res.send).toHaveBeenCalledWith(exchangeRate);
+    expect(res.send).toHaveBeenCalledWith({ exchangeRates });
   });
 });
