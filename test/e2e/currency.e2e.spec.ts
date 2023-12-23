@@ -27,7 +27,7 @@ describe('Currency E2E Test', () => {
 
     // then
     expect(result).toEqual({
-      exchangeRate: [
+      exchangeRates: [
         { currency: 'PLN', exchangeRate: 3.77 },
         { currency: 'EUR', exchangeRate: 0.89 },
         { currency: 'GBP', exchangeRate: 0.79 },

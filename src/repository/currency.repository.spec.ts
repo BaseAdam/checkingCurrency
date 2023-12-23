@@ -29,7 +29,7 @@ describe('currency repository - unit test', () => {
     when(configMock.getCurrenciesPath()).thenReturn(join(__filename, '..', '..', 'config', 'currencies.json'));
     const currencyRepository = new CurrencyRepository(instance(configMock));
     const mainCurrency = 'USD';
-    const exchangeRate: ExchangeRate[] = [
+    const exchangeRates: ExchangeRate[] = [
       { currency: Currency.PLN, exchangeRate: 3.77 },
       { currency: Currency.EUR, exchangeRate: 0.89 },
       { currency: Currency.GBP, exchangeRate: 0.79 },
@@ -40,6 +40,6 @@ describe('currency repository - unit test', () => {
     const result = await currencyRepository.getCurrencyChangeRate(mainCurrency);
 
     //expect
-    expect(result).toEqual({ exchangeRate });
+    expect(result).toEqual({ exchangeRates });
   });
 });

@@ -41,7 +41,7 @@ describe('Currency Service Integration Test', () => {
     when(configMock.getCurrenciesPath()).thenReturn(join(__filename, '..', '__mocks__', 'valid-currencies.json'));
     const currencyService = new CurrencyService(new CurrencyRepository(instance(configMock)));
 
-    const exchangeRate: ExchangeRate[] = [
+    const exchangeRates: ExchangeRate[] = [
       { currency: Currency.PLN, exchangeRate: 3.77 },
       { currency: Currency.EUR, exchangeRate: 0.89 },
       { currency: Currency.GBP, exchangeRate: 0.79 },
@@ -52,6 +52,6 @@ describe('Currency Service Integration Test', () => {
     const result = await currencyService.getCurrencyChangeRate(mainCurrency);
 
     // expect Currency array using jest matchers
-    expect(result).toMatchObject({ exchangeRate });
+    expect(result).toMatchObject({ exchangeRates });
   });
 });
