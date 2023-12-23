@@ -15,5 +15,5 @@
 NOTE: Configuration File with Currencies and exchange rates
 
 - [x] Endpoint to get all currencies: GET /currencies [USD, PLN, EUR, GBP, CHF]
-- [] Endpoint to get currency change rate: GET /currencies/:currency [PLN, EUR, GBP, CHF]
+- [x] Endpoint to get currency change rate: GET /currencies/:currency [PLN, EUR, GBP, CHF]
 - [] Endpoint to get currency change rate: GET /currencies/:currency?compare_to=currency

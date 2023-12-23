@@ -36,5 +36,6 @@ export class Application {
 
   public async stop(): Promise<void> {
     this.server.close();
+    this.app.removeAllListeners();
   }
 }

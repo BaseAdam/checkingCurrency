@@ -5,12 +5,12 @@ describe('Currency E2E Test', () => {
   let apiCalls: ApiCalls;
   let testApp: TestApplication;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     testApp = await TestApplication.start();
     apiCalls = new ApiCalls(testApp.getBasePath());
   });
 
-  afterEach(async () => {
+  afterAll(async () => {
     await testApp.stop();
   });
 
@@ -21,13 +21,14 @@ describe('Currency E2E Test', () => {
     // then
     expect(result).toEqual(['USD', 'PLN', 'EUR', 'GBP', 'CHF']);
   });
+
   it('should return exchange rate of a given currency', async () => {
     // when
     const result = await apiCalls.getExchangeRate();
 
     // then
     expect(result).toEqual({
-      exchangeRate: [
+      exchangeRates: [
         { currency: 'PLN', exchangeRate: 3.77 },
         { currency: 'EUR', exchangeRate: 0.89 },
         { currency: 'GBP', exchangeRate: 0.79 },

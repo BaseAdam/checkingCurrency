@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { CurrencyService } from '../service/currency.service';
+import { Currency } from '../repository/currency.repository';
 
 export class CurrencyController {
   private readonly currencyService: CurrencyService;
@@ -14,8 +15,8 @@ export class CurrencyController {
   }
 
   public async getCurrencyChangeRate(req: Request, res: Response): Promise<void> {
-    const currency = String(req.params.currency);
+    const currency = req.params.currency as Currency;
     const currencyChangeRate = await this.currencyService.getCurrencyChangeRate(currency);
-    res.send(currencyChangeRate);
+    res.send({ exchangeRates: currencyChangeRate });
   }
 }
