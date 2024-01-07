@@ -1,7 +1,4 @@
-import {
-  Currency,
-  CurrencyRepository,
-} from '../repository/currency.repository';
+import { Currency, CurrencyRepository, ExchangeRate } from '../repository/currency.repository';
 import { CurrencyService } from './currency.service';
 import { mock, when, instance } from 'ts-mockito';
 
@@ -18,14 +15,29 @@ describe('currency service - unit test', () => {
   it('should return all currencies', async () => {
     // given
     const testedCurrencies = [Currency.USD, Currency.PLN];
-    when(currencyRepositoryMock.getAllCurrencies()).thenResolve(
-      testedCurrencies
-    );
+    when(currencyRepositoryMock.getAllCurrencies()).thenResolve(testedCurrencies);
 
     // when
     const result = await currencyService.getAllCurrencies();
 
     // then
     expect(result).toEqual(testedCurrencies);
+  });
+
+  it('should return rates of given currency', async () => {
+    // given
+    const mainCurrency = 'USD';
+    const exchangeRate: ExchangeRate[] = [
+      { currency: Currency.PLN, exchangeRate: 3.77 },
+      { currency: Currency.EUR, exchangeRate: 0.89 },
+    ];
+
+    when(currencyRepositoryMock.getCurrencyChangeRate(mainCurrency)).thenResolve(exchangeRate);
+
+    // when
+    const result = await currencyService.getCurrencyChangeRate(mainCurrency);
+
+    // then
+    expect(result).toEqual(exchangeRate);
   });
 });

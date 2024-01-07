@@ -6,20 +6,17 @@ import { CurrencyController } from './controller/currency.controller';
 import { CurrencyService } from './service/currency.service';
 import { CurrencyRepository } from './repository/currency.repository';
 import { Config } from './config/config';
+import { ValidationMiddleware } from './middleware/middleware';
 
 export class Application {
   private readonly routes: Routes;
 
   private constructor(
     private readonly app: express.Express,
-    private readonly server: Server
+    private readonly server: Server,
   ) {
-    this.routes = new Routes(
-      new CurrencyController(
-        new CurrencyService(new CurrencyRepository(new Config()))
-      )
-    );
-    const currencyRouter = this.routes.registerCurrencyRoutes();
+    this.routes = new Routes(new CurrencyController(new CurrencyService(new CurrencyRepository(new Config()))), new ValidationMiddleware());
+    const currencyRouter = this.routes.registerRoutes();
     app.use('/api', currencyRouter);
   }
 

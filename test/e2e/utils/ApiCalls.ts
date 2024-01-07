@@ -1,4 +1,5 @@
 import axios, { Axios } from 'axios';
+import { ExchangeRate } from '../../../src/repository/currency.repository';
 import { Currency } from '../../../src/repository/currency.repository';
 
 export class ApiCalls {
@@ -13,6 +14,11 @@ export class ApiCalls {
 
   public async getCurrencies(): Promise<Currency> {
     const response = await this.httpClient.get('/currency');
+    return response.data;
+  }
+
+  public async getExchangeRate(): Promise<ExchangeRate> {
+    const response = await this.httpClient.get('/currency/USD');
     return response.data;
   }
 }
