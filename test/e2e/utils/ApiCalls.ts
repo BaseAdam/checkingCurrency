@@ -1,5 +1,5 @@
 import axios, { Axios } from 'axios';
-import { ExchangeRate } from '../../../src/repository/currency.repository';
+import { ComparisonRate, ExchangeRate } from '../../../src/repository/currency.repository';
 import { Currency } from '../../../src/repository/currency.repository';
 
 export class ApiCalls {
@@ -19,6 +19,11 @@ export class ApiCalls {
 
   public async getExchangeRate(): Promise<ExchangeRate> {
     const response = await this.httpClient.get('/currency/USD');
+    return response.data;
+  }
+
+  public async getCurrencyComparison(): Promise<ComparisonRate> {
+    const response = await this.httpClient.get('/currency/USD?compare_to=EUR');
     return response.data;
   }
 }
