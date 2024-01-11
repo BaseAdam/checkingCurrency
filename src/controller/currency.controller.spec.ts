@@ -1,7 +1,7 @@
 import { CurrencyService } from '../service/currency.service';
 import { CurrencyController } from './currency.controller';
 import { instance, mock, when } from 'ts-mockito';
-import { Currency, ExchangeRate } from '../repository/currency.repository';
+import { ComparisonRate, Currency, ExchangeRate } from '../repository/currency.repository';
 import { Request, Response } from 'express';
 
 describe('currency controller - unit test', () => {
@@ -17,6 +17,7 @@ describe('currency controller - unit test', () => {
     } as unknown as Response;
     req = {
       params: { currency: 'USD' },
+      query: { compare_to: 'PLN' },
     } as unknown as Request;
     currencyController = new CurrencyController(instance(currencyServiceMock));
   });
@@ -47,5 +48,20 @@ describe('currency controller - unit test', () => {
 
     //then
     expect(res.send).toHaveBeenCalledWith({ exchangeRates });
+  });
+
+  it('send exchange rate of given currency comparison', async () => {
+    //given
+    const mainCurrency = Currency.USD;
+    const currencyToCompare = Currency.PLN;
+    const exchangeRate: ComparisonRate = { exchangeRate: 0.5 };
+
+    when(currencyServiceMock.getCurrencyComparison(mainCurrency, currencyToCompare)).thenResolve(exchangeRate);
+
+    //when
+    await currencyController.getCurrencyComparison(req, res);
+
+    //then
+    expect(res.send).toHaveBeenCalledWith(exchangeRate);
   });
 });

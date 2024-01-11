@@ -36,4 +36,12 @@ describe('Currency E2E Test', () => {
       ],
     });
   });
+
+  it('should return exchange rate of currency comparison', async () => {
+    //when
+    const result = await apiCalls.getCurrencyComparison();
+
+    //then
+    expect(result).toEqual({ exchangeRate: 0.89 });
+  });
 });

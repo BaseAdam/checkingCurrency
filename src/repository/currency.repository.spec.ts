@@ -1,5 +1,5 @@
 import { Config } from '../config/config';
-import { CurrencyRepository, ExchangeRate } from './currency.repository';
+import { ComparisonRate, CurrencyRepository, ExchangeRate } from './currency.repository';
 import { mock, when, instance } from 'ts-mockito';
 import { join } from 'path';
 import { Currency } from './currency.repository';
@@ -42,5 +42,21 @@ describe('currency repository - unit test', () => {
 
     //expect
     expect(result).toStrictEqual(exchangeRates);
+  });
+
+  it('should return exchange rate of currency comparison', async () => {
+    //given
+    const mainCurrency = Currency.USD;
+    const currencyToCompare = Currency.EUR;
+    const exchangeRate: ComparisonRate = { exchangeRate: 0.89 };
+
+    when(configMock.getCurrenciesPath()).thenReturn(join(__filename, '..', '..', 'config', 'currencies.json'));
+    const currencyRepository = new CurrencyRepository(instance(configMock));
+
+    //when
+    const result = await currencyRepository.getCurrencyComparison(mainCurrency, currencyToCompare);
+
+    //then
+    expect(result).toStrictEqual(exchangeRate);
   });
 });
