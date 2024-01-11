@@ -19,4 +19,11 @@ export class CurrencyController {
     const currencyChangeRate = await this.currencyService.getCurrencyChangeRate(currency);
     res.send({ exchangeRates: currencyChangeRate });
   }
+
+  public async getCurrencyComparison(req: Request, res: Response): Promise<void> {
+    const currency = req.params.currency as Currency;
+    const currencyToCompare = req.query.compare_to as Currency;
+    const currencyCompare = await this.currencyService.getCurrencyComparison(currency, currencyToCompare);
+    res.send(currencyCompare);
+  }
 }

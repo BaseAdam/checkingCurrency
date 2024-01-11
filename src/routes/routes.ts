@@ -17,10 +17,13 @@ export class Routes {
       '/currency/:currency',
       (req, res, next) => this.validationMiddleware.getMiddleware(validateCurrency)(req, res, next),
       (req, res) => {
-        this.currencyController.getCurrencyChangeRate(req, res);
+        if (req.query.compare_to) {
+          this.currencyController.getCurrencyComparison(req, res);
+        } else {
+          this.currencyController.getCurrencyChangeRate(req, res);
+        }
       },
     );
-
     return router;
   }
 }

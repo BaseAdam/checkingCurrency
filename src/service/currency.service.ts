@@ -1,4 +1,4 @@
-import { CurrencyRepository, ExchangeRate } from '../repository/currency.repository';
+import { ComparisonRate, CurrencyRepository, ExchangeRate } from '../repository/currency.repository';
 import { Currency } from '../repository/currency.repository';
 
 export class CurrencyService {
@@ -14,5 +14,9 @@ export class CurrencyService {
 
   public async getCurrencyChangeRate(currency: Currency): Promise<ExchangeRate[]> {
     return this.currencyRepository.getCurrencyChangeRate(currency);
+  }
+
+  public async getCurrencyComparison(currency: Currency, currencyToCompare: Currency): Promise<ComparisonRate> {
+    return this.currencyRepository.getCurrencyComparison(currency, currencyToCompare);
   }
 }
