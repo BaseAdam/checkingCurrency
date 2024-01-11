@@ -17,6 +17,7 @@ export type Currencies = {
 };
 
 export type ExchangeRate = { currency: Currency; exchangeRate: number };
+export type ComparisonRate = { exchangeRate: number };
 
 export const validateCurrency: ValidationMiddlewareFunc = ({ params }) => {
   const currency = params.currency;
@@ -52,5 +53,14 @@ export class CurrencyRepository {
     }
 
     return Object.entries(exchangeRates).map(([key, value]) => ({ currency: key as Currency, exchangeRate: value }));
+  }
+
+  public async getCurrencyComparison(currency: Currency, currencyToCompare: Currency): Promise<ComparisonRate> {
+    const allExchangeRates = this.currencies[currency];
+    const chosenCurrencyExchangeRate = allExchangeRates[currencyToCompare];
+    if (currency === currencyToCompare) {
+      return { exchangeRate: 1 };
+    }
+    return { exchangeRate: chosenCurrencyExchangeRate };
   }
 }
