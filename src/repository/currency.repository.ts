@@ -19,18 +19,34 @@ export type Currencies = {
 export type ExchangeRate = { currency: Currency; exchangeRate: number };
 export type ComparisonRate = { exchangeRate: number };
 
-export const validateCurrency: ValidationMiddlewareFunc = ({ params }) => {
-  const currency = params.currency;
-
+const isCurrency = (currency: unknown): currency is Currency => {
   if (!currency) {
-    throw new Error('Currency is required');
+    return false;
   }
 
   if (typeof currency !== 'string') {
-    throw new Error('Currency must be a string');
+    return false;
   }
 
   if (!Object.values(Currency).includes(currency as Currency)) {
+    return false;
+  }
+
+  return true;
+};
+
+export const validateCurrency: ValidationMiddlewareFunc = ({ params }) => {
+  const currency = params.currency;
+
+  if (!isCurrency(currency)) {
+    throw new Error('Currency not found');
+  }
+};
+
+export const validateCurrencyInQueryIfExists: ValidationMiddlewareFunc = ({ query }) => {
+  const currency = query.compare_to;
+
+  if (currency && !isCurrency(currency)) {
     throw new Error('Currency not found');
   }
 };
