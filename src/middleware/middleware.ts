@@ -8,7 +8,7 @@ export type ValidationMiddlewareFunc = (data: {
   query: Record<string, unknown>;
 }) => void;
 
-export class ValidationMiddleware {
+export class ValidationMiddlewareFactory {
   public getMiddleware(validate: ValidationMiddlewareFunc) {
     return (req: Request, res: Response, next: NextFunction): void | Error => {
       try {
