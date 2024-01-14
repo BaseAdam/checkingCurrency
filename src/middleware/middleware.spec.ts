@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from 'express';
-import { ValidationMiddleware } from './middleware';
+import { ValidationMiddlewareFactory } from './middleware';
 
 describe('validation middleware - unit test', () => {
   let req: Request;
-  let validationMiddleware: ValidationMiddleware;
+  let validationMiddleware: ValidationMiddlewareFactory;
   let res: Response;
   let nextMock: NextFunction;
 
@@ -13,7 +13,7 @@ describe('validation middleware - unit test', () => {
       send: jest.fn(),
     } as unknown as Response;
     req = {} as Request;
-    validationMiddleware = new ValidationMiddleware();
+    validationMiddleware = new ValidationMiddlewareFactory();
     nextMock = jest.fn();
   });
 
