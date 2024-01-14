@@ -1,6 +1,6 @@
 import { CurrencyController } from '../controller/currency.controller';
 import { ValidationMiddleware } from '../middleware/middleware';
-import { validateCurrency } from '../repository/currency.repository';
+import { validateCurrency, validateCurrencyInQueryIfExists } from '../repository/currency.repository';
 import { Router } from 'express';
 
 export class Routes {
@@ -16,6 +16,7 @@ export class Routes {
     router.get(
       '/currency/:currency',
       (req, res, next) => this.validationMiddleware.getMiddleware(validateCurrency)(req, res, next),
+      (req, res, next) => this.validationMiddleware.getMiddleware(validateCurrencyInQueryIfExists)(req, res, next),
       (req, res) => {
         if (req.query.compare_to) {
           this.currencyController.getCurrencyComparison(req, res);

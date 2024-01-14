@@ -1,7 +1,12 @@
 import { NextFunction, Request, Response } from 'express';
 import { IncomingHttpHeaders } from 'http';
 
-export type ValidationMiddlewareFunc = (data: { body: unknown; params: Record<string, unknown>; headers: IncomingHttpHeaders }) => void;
+export type ValidationMiddlewareFunc = (data: {
+  body: unknown;
+  params: Record<string, unknown>;
+  headers: IncomingHttpHeaders;
+  query: Record<string, unknown>;
+}) => void;
 
 export class ValidationMiddleware {
   public getMiddleware(validate: ValidationMiddlewareFunc) {
@@ -11,6 +16,7 @@ export class ValidationMiddleware {
           body: req.body,
           params: req.params,
           headers: req.headers,
+          query: req.query,
         });
       } catch (error) {
         const errorMessage = error instanceof Error ? error.message : 'Unknown error';

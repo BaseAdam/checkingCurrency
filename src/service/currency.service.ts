@@ -19,8 +19,8 @@ export class CurrencyService {
   public async getCurrencyComparison(currency: Currency, currencyToCompare: Currency): Promise<ComparisonRate> {
     if (currency === currencyToCompare) {
       return { exchangeRate: 1 };
-    } else {
-      return this.currencyRepository.getCurrencyComparison(currency, currencyToCompare);
     }
+
+    return this.currencyRepository.getCurrencyComparison(currency, currencyToCompare);
   }
 }
