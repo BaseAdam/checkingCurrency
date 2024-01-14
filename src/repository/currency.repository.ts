@@ -58,9 +58,6 @@ export class CurrencyRepository {
   public async getCurrencyComparison(currency: Currency, currencyToCompare: Currency): Promise<ComparisonRate> {
     const allExchangeRates = this.currencies[currency];
     const chosenCurrencyExchangeRate = allExchangeRates[currencyToCompare];
-    if (currency === currencyToCompare) {
-      return { exchangeRate: 1 };
-    }
     return { exchangeRate: chosenCurrencyExchangeRate };
   }
 }
