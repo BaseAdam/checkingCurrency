@@ -5,7 +5,7 @@ const config: JestConfigWithTsJest = {
   reporters: ['default', ['jest-junit', { outputName: 'junit.xml' }]],
   testEnvironment: 'node',
   verbose: true,
-  coverageDirectory: 'coverage',
+  coverageDirectory: './coverage/',
   coveragePathIgnorePatterns: ['./node_modules/', './dist/'],
   testPathIgnorePatterns: ['/dist', '/node_modules'],
   coverageReporters: ['lcov'],
