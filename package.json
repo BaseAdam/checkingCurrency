@@ -15,7 +15,8 @@
     "format:fix": "prettier --write \"{src,tests}/**/*.{ts,json}\"",
     "lint:fix": "eslint \"src/**/*.ts\" --fix",
     "start": "node ./dist/main.js",
-    "dev": "nodemon ./src/main.ts"
+    "dev": "nodemon ./src/main.ts",
+    "coverage": "jest --coverage"
   },
   "repository": {
     "type": "git",
