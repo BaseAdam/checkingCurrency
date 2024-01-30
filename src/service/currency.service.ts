@@ -8,7 +8,7 @@ export class CurrencyService {
     this.currencyRepository = currencyRepository;
   }
 
-  public async getAllCurrencies(): Promise<Currency[]> {
+  public async getAllCurrencies(): Promise<string[]> {
     return this.currencyRepository.getAllCurrencies();
   }
 
