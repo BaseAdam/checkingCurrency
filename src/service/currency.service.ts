@@ -1,4 +1,5 @@
-import { ComparisonRate, CurrencyRepository, ExchangeRate } from '../repository/currency.repository';
+import { Document } from 'mongodb';
+import { CurrencyRepository } from '../repository/currency.repository';
 import { Currency } from '../repository/currency.repository';
 
 export class CurrencyService {
@@ -8,15 +9,15 @@ export class CurrencyService {
     this.currencyRepository = currencyRepository;
   }
 
-  public async getAllCurrencies(): Promise<Currency[]> {
+  public async getAllCurrencies(): Promise<string[]> {
     return this.currencyRepository.getAllCurrencies();
   }
 
-  public async getCurrencyChangeRate(currency: Currency): Promise<ExchangeRate[]> {
+  public async getCurrencyChangeRate(currency: Currency): Promise<Document[]> {
     return this.currencyRepository.getCurrencyChangeRate(currency);
   }
 
-  public async getCurrencyComparison(currency: Currency, currencyToCompare: Currency): Promise<ComparisonRate> {
+  public async getCurrencyComparison(currency: Currency, currencyToCompare: Currency): Promise<Document> {
     if (currency === currencyToCompare) {
       return { exchangeRate: 1 };
     }

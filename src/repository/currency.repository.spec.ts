@@ -1,34 +1,33 @@
-import { Config } from '../config/config';
-import { ComparisonRate, CurrencyRepository, ExchangeRate } from './currency.repository';
-import { mock, when, instance } from 'ts-mockito';
-import { join } from 'path';
+import { CollectionType, ComparisonRate, CurrencyRepository, ExchangeRate } from './currency.repository';
+import { when, instance } from 'ts-mockito';
 import { Currency } from './currency.repository';
+import { Collection } from 'mongodb';
 
 describe('currency repository - unit test', () => {
-  let configMock: Config;
+  let currencyRepository: CurrencyRepository;
+  let collectionMock: Collection<CollectionType>;
 
   beforeEach(() => {
-    configMock = mock(Config);
+    collectionMock = {
+      aggregate: jest.fn().mockReturnThis(),
+      toArray: jest.fn(),
+    } as unknown as Collection<CollectionType>;
+    when(collectionMock.aggregate().toArray()).thenResolve([{ _id: null, currencies: ['USD', 'PLN'] }]);
+    currencyRepository = new CurrencyRepository(instance(collectionMock));
   });
 
-  it('should return values from file', async () => {
+  it('should return values from db', async () => {
     //given
-    when(configMock.getCurrenciesPath()).thenReturn(join(__filename, '..', '..', 'config', 'currencies.json'));
-    const currencyRepository = new CurrencyRepository(instance(configMock));
-
+    const currencyNames = ['USD', 'PLN'];
     //when
     const result = await currencyRepository.getAllCurrencies();
 
     //expect
-    result.forEach((currency) => {
-      expect(Object.values(Currency).includes(currency)).toEqual(true);
-    });
+    expect(result).toEqual(currencyNames);
   });
 
   it('should return exchange rate of given currency', async () => {
     //given
-    when(configMock.getCurrenciesPath()).thenReturn(join(__filename, '..', '..', 'config', 'currencies.json'));
-    const currencyRepository = new CurrencyRepository(instance(configMock));
     const mainCurrency = Currency.USD;
     const exchangeRates: ExchangeRate[] = [
       { currency: Currency.PLN, exchangeRate: 3.77 },
@@ -49,9 +48,6 @@ describe('currency repository - unit test', () => {
     const mainCurrency = Currency.USD;
     const currencyToCompare = Currency.EUR;
     const exchangeRate: ComparisonRate = { exchangeRate: 0.89 };
-
-    when(configMock.getCurrenciesPath()).thenReturn(join(__filename, '..', '..', 'config', 'currencies.json'));
-    const currencyRepository = new CurrencyRepository(instance(configMock));
 
     //when
     const result = await currencyRepository.getCurrencyComparison(mainCurrency, currencyToCompare);
