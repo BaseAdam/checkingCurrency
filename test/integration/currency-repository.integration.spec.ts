@@ -1,30 +1,40 @@
-import { instance, mock, when } from 'ts-mockito';
-import { Config } from '../../src/config/config';
-import { CurrencyRepository, Currency, ExchangeRate, ComparisonRate } from '../../src/repository/currency.repository';
+import { instance, when } from 'ts-mockito';
+import { CurrencyRepository, Currency, ExchangeRate, ComparisonRate, CollectionType } from '../../src/repository/currency.repository';
 import { CurrencyService } from '../../src/service/currency.service';
 import { join } from 'path';
+import { GenericContainer, Network, StartedTestContainer, StartedNetwork } from 'testcontainers';
+import { Collection } from 'mongodb';
 
 describe('Currency Service Integration Test', () => {
-  let configMock: Config;
+  let collectionMock: Collection<CollectionType>;
   const mainCurrency = Currency.USD;
   const currencyToCompare = Currency.CHF;
+  let mongoContainer: StartedTestContainer;
+  let network: StartedNetwork;
 
-  beforeEach(() => {
-    configMock = mock(Config);
+  beforeAll(async () => {
+    network = await new Network().start();
+    mongoContainer = await new GenericContainer('mongo').withName('test_mongo').withNetworkMode(network.getName()).start();
   });
 
-  it('should return values from file', async () => {
+  beforeEach(() => {
+    collectionMock = {
+      aggregate: jest.fn().mockReturnThis(),
+      toArray: jest.fn(),
+    } as unknown as Collection<CollectionType>;
+  });
+
+  it('should return values from db', async () => {
     // given
-    when(configMock.getCurrenciesPath()).thenReturn(join(__filename, '..', '__mocks__', 'valid-currencies.json'));
-    const currencyService = new CurrencyService(new CurrencyRepository(instance(configMock)));
+    const currencyNames = ['USD', 'PLN'];
+    when(collectionMock.aggregate().toArray()).thenResolve([{ _id: null, currencies: ['USD', 'PLN'] }]);
+    const currencyRepository = new CurrencyRepository(collectionMock);
 
     // when
-    const result = await currencyService.getAllCurrencies();
+    const result = await currencyRepository.getAllCurrencies();
 
     // expect Currency array using jest matchers
-    result.forEach((currency) => {
-      expect(Object.values(Currency).includes(currency)).toEqual(true);
-    });
+    expect(result).toEqual(currencyNames);
   });
 
   it('should throw when invalid file is provided', async () => {
@@ -69,5 +79,10 @@ describe('Currency Service Integration Test', () => {
 
     //then
     expect(result).toStrictEqual(exchangeRate);
+  });
+
+  afterAll(async () => {
+    await mongoContainer.stop();
+    await network.stop();
   });
 });

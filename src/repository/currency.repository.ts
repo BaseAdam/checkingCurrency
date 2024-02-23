@@ -1,6 +1,8 @@
-import { readFileSync } from 'fs';
-import { Config } from '../config/config';
 import { ValidationMiddlewareFunc } from '../middleware/middleware';
+import { Collection, Document, ObjectId } from 'mongodb';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 export enum Currency {
   USD = 'USD',
@@ -10,14 +12,11 @@ export enum Currency {
   CHF = 'CHF',
 }
 
-export type Currencies = {
-  currencies: {
-    [outerKey in Currency]: Record<Currency, number>;
-  };
-};
-
 export type ExchangeRate = { currency: Currency; exchangeRate: number };
 export type ComparisonRate = { exchangeRate: number };
+export type CollectionType = {
+  [x: string]: { _id: ObjectId; name: string; rates: Record<string, number> };
+};
 
 const isCurrency = (currency: unknown): currency is Currency => {
   if (!currency) {
@@ -52,28 +51,74 @@ export const validateCurrencyInQueryIfExists: ValidationMiddlewareFunc = ({ quer
 };
 
 export class CurrencyRepository {
-  private readonly currencies: Currencies['currencies'];
+  private readonly exchangeRatesCollection: Collection<CollectionType>;
 
-  constructor(private readonly config: Config) {
-    this.currencies = JSON.parse(readFileSync(this.config.getCurrenciesPath(), 'utf-8')).currencies;
+  constructor(private readonly collection: Collection<CollectionType>) {
+    this.exchangeRatesCollection = this.collection;
   }
 
-  public async getAllCurrencies(): Promise<Currency[]> {
-    return Object.values(Currency);
+  public async getAllCurrencies(): Promise<string[]> {
+    const pipeline = [
+      {
+        $group: {
+          _id: null,
+          currencies: { $push: '$name' },
+        },
+      },
+      {
+        $project: {
+          currencies: 1,
+        },
+      },
+    ];
+    const currencyArray = await this.exchangeRatesCollection.aggregate(pipeline).toArray();
+    if (currencyArray[0] && currencyArray[0].currencies) {
+      const currencyNames = currencyArray[0].currencies;
+      return currencyNames;
+    } else {
+      throw new Error('Currencies not found');
+    }
   }
 
-  public async getCurrencyChangeRate(currency: Currency): Promise<ExchangeRate[]> {
-    const exchangeRates = this.currencies[currency];
-    if (!exchangeRates) {
+  public async getCurrencyChangeRate(currency: Currency): Promise<Document[]> {
+    const pipeline = [
+      { $match: { name: currency } },
+      {
+        $project: {
+          name: 1,
+          ratesArray: { $objectToArray: '$rates' },
+        },
+      },
+      {
+        $unwind: '$ratesArray',
+      },
+      {
+        $project: {
+          _id: 0,
+          currency: '$ratesArray.k',
+          exchangeRate: '$ratesArray.v',
+        },
+      },
+    ];
+    const currenciesArray = await this.exchangeRatesCollection.aggregate(pipeline).toArray();
+    if (currenciesArray) {
+      return currenciesArray;
+    } else {
       throw new Error('Currency not found');
     }
-
-    return Object.entries(exchangeRates).map(([key, value]) => ({ currency: key as Currency, exchangeRate: value }));
   }
 
-  public async getCurrencyComparison(currency: Currency, currencyToCompare: Currency): Promise<ComparisonRate> {
-    const allExchangeRates = this.currencies[currency];
-    const chosenCurrencyExchangeRate = allExchangeRates[currencyToCompare];
-    return { exchangeRate: chosenCurrencyExchangeRate };
+  public async getCurrencyComparison(currency: Currency, currencyToCompare: Currency): Promise<Document> {
+    const pipeline = [
+      { $match: { name: currency } },
+      { $group: { _id: `$rates.${currencyToCompare}` } },
+      { $project: { _id: 0, exchangeRate: '$_id' } },
+    ];
+    const currenciesArray = await this.exchangeRatesCollection.aggregate(pipeline).toArray();
+    if (currenciesArray[0]) {
+      return currenciesArray[0];
+    } else {
+      throw new Error('Currency not found');
+    }
   }
 }
