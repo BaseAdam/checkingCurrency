@@ -1,5 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { IncomingHttpHeaders } from 'http';
+import { injectable } from 'inversify';
+import 'reflect-metadata';
 
 export type ValidationMiddlewareFunc = (data: {
   body: unknown;
@@ -8,6 +10,7 @@ export type ValidationMiddlewareFunc = (data: {
   query: Record<string, unknown>;
 }) => void;
 
+@injectable()
 export class ValidationMiddlewareFactory {
   public getMiddleware(validate: ValidationMiddlewareFunc) {
     return (req: Request, res: Response, next: NextFunction): void | Error => {

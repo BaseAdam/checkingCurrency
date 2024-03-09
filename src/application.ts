@@ -1,26 +1,20 @@
 import express from 'express';
 import { Server } from 'http';
 import * as path from 'path';
-import { CurrencyController } from './controller/currency.controller';
-import { CurrencyRepository } from './repository/currency.repository';
 import { Routes } from './routes/routes';
-import { CurrencyService } from './service/currency.service';
-import { ValidationMiddlewareFactory } from './middleware/middleware';
 import { MongoDatabase } from './mongo-database';
 import { Config } from './config/config';
+import 'reflect-metadata';
+import { container } from './inversify.config';
+import { Collection } from 'mongodb';
 
 export class Application {
-  private readonly routes: Routes;
-
   private constructor(
     private readonly app: express.Express,
     private database: MongoDatabase,
     private readonly server: Server,
+    private readonly routes: Routes,
   ) {
-    this.routes = new Routes(
-      new CurrencyController(new CurrencyService(new CurrencyRepository(database.getCollection('Currencies')))),
-      new ValidationMiddlewareFactory(),
-    );
     const currencyRouter = this.routes.registerRoutes();
     app.use('/api', currencyRouter);
   }
@@ -35,9 +29,16 @@ export class Application {
     });
     server.on('error', console.error);
 
-    const database = await MongoDatabase.connect(config.getDatabaseUri());
+    container.bind(Server).toConstantValue(server);
+    container.bind(MongoDatabase).toDynamicValue(async () => {
+      const database = await MongoDatabase.connect(config.getDatabaseUri());
+      return database;
+    });
+    const database = await container.get(MongoDatabase);
+    container.bind<Collection>('CollectionCurrency').toDynamicValue(async () => await database.getCollection('Currencies'));
+    container.bind(express()).toConstantValue(app);
 
-    return new Application(app, database, server);
+    return container.get(app);
   }
 
   public async stop(): Promise<void> {

@@ -1,7 +1,10 @@
+import { injectable } from 'inversify';
 import { Collection, Document, MongoClient } from 'mongodb';
+import 'reflect-metadata';
 
+@injectable()
 export class MongoDatabase {
-  private constructor(private readonly client: MongoClient) {}
+  constructor(private readonly client: MongoClient) {}
 
   public static async connect(uri: string): Promise<MongoDatabase> {
     const client = new MongoClient(uri);

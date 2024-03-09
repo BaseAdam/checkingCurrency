@@ -1,13 +1,12 @@
 import { Request, Response } from 'express';
+import 'reflect-metadata';
 import { CurrencyService } from '../service/currency.service';
 import { Currency } from '../repository/currency.repository';
+import { injectable, inject } from 'inversify';
 
+@injectable()
 export class CurrencyController {
-  private readonly currencyService: CurrencyService;
-
-  constructor(currencyService: CurrencyService) {
-    this.currencyService = currencyService;
-  }
+  constructor(@inject(CurrencyService) private currencyService: CurrencyService) {}
 
   public async getAllCurrencies(req: Request, res: Response): Promise<void> {
     const currencies = await this.currencyService.getAllCurrencies();
