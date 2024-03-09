@@ -1,6 +1,8 @@
 import { ValidationMiddlewareFunc } from '../middleware/middleware';
 import { Collection } from 'mongodb';
 import dotenv from 'dotenv';
+import { inject, injectable } from 'inversify';
+import 'reflect-metadata';
 
 dotenv.config();
 
@@ -48,8 +50,9 @@ export const validateCurrencyInQueryIfExists: ValidationMiddlewareFunc = ({ quer
   }
 };
 
+@injectable()
 export class CurrencyRepository {
-  constructor(private readonly collection: Collection<CurrencyEntity>) {}
+  constructor(@inject('CollectionCurrency') private collection: Collection<CurrencyEntity>) {}
 
   public async getAllCurrencies(): Promise<string[]> {
     const currencies = await this.collection.find().toArray();

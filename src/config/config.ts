@@ -1,5 +1,6 @@
+import { injectable } from 'inversify';
 import { join } from 'path';
-
+@injectable()
 export class Config {
   public getCurrenciesPath(): string {
     return join(__filename, '..', 'currencies.json');
@@ -10,6 +11,6 @@ export class Config {
   }
 
   public getPort(): number {
-    return parseInt(process.env['PORT'] || '3333');
+    return parseInt(process.env['PORT'] || '8080');
   }
 }

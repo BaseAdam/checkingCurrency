@@ -1,9 +1,10 @@
 import { Collection, Document, MongoClient } from 'mongodb';
+import 'reflect-metadata';
 
 export class MongoDatabase {
   private constructor(private readonly client: MongoClient) {}
 
-  public static async connect(uri: string): Promise<MongoDatabase> {
+  public static async start(uri: string): Promise<MongoDatabase> {
     const client = new MongoClient(uri);
     await client.connect();
     return new MongoDatabase(client);

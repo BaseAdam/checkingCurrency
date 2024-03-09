@@ -1,9 +1,8 @@
 import { Application } from './application';
-import { Config } from './config/config';
 
 const main = async (): Promise<void> => {
   try {
-    await Application.start(new Config());
+    await Application.start();
   } catch (error) {
     console.error(error);
   }

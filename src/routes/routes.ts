@@ -1,12 +1,15 @@
+import { inject, injectable } from 'inversify';
 import { CurrencyController } from '../controller/currency.controller';
 import { ValidationMiddlewareFactory } from '../middleware/middleware';
 import { validateCurrency, validateCurrencyInQueryIfExists } from '../repository/currency.repository';
 import { Router } from 'express';
+import 'reflect-metadata';
 
+@injectable()
 export class Routes {
   constructor(
-    private readonly currencyController: CurrencyController,
-    private readonly validationMiddlewareFactory: ValidationMiddlewareFactory,
+    @inject(CurrencyController) private readonly currencyController: CurrencyController,
+    @inject(ValidationMiddlewareFactory) private readonly validationMiddlewareFactory: ValidationMiddlewareFactory,
   ) {}
 
   public registerRoutes(): Router {

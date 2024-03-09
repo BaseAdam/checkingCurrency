@@ -1,16 +1,15 @@
 import { Application } from '../../../src/application';
-import { Config } from '../../../src/config/config';
 
 export class TestApplication {
   constructor(private readonly app: Application) {}
 
   public static async start(): Promise<TestApplication> {
-    const app = await Application.start(new Config());
+    const app = await Application.start();
     return new TestApplication(app);
   }
 
   public getBasePath(): string {
-    return 'http://localhost:3333/api';
+    return 'http://localhost:8080/api';
   }
 
   public async stop(): Promise<void> {

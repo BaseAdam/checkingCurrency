@@ -1,12 +1,11 @@
+import { injectable, inject } from 'inversify';
 import { ComparisonRate, CurrencyRepository, ExchangeRate } from '../repository/currency.repository';
 import { Currency } from '../repository/currency.repository';
+import 'reflect-metadata';
 
+@injectable()
 export class CurrencyService {
-  private readonly currencyRepository: CurrencyRepository;
-
-  constructor(currencyRepository: CurrencyRepository) {
-    this.currencyRepository = currencyRepository;
-  }
+  constructor(@inject(CurrencyRepository) private currencyRepository: CurrencyRepository) {}
 
   public async getAllCurrencies(): Promise<string[]> {
     return this.currencyRepository.getAllCurrencies();
