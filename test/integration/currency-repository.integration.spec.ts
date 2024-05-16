@@ -2,7 +2,6 @@ import { GenericContainer, StartedTestContainer } from 'testcontainers';
 import { Collection } from 'mongodb';
 import { MongoDatabase } from '../../src/mongo-database';
 import { ComparisonRate, Currency, CurrencyEntity, CurrencyRepository, ExchangeRate } from '../../src/repository/currency.repository';
-import { container } from '../../src/inversify.config';
 
 describe('Currency Repository Integration Test', () => {
   const mainCurrency = Currency.USD;
@@ -13,7 +12,8 @@ describe('Currency Repository Integration Test', () => {
 
   beforeAll(async () => {
     mongoContainer = await new GenericContainer('mongo').withExposedPorts(27017).start();
-    mongoDatabase = await container.getAsync(MongoDatabase);
+    const uri = `mongodb://localhost:${mongoContainer.getMappedPort(27017)}`;
+    mongoDatabase = await MongoDatabase.start(uri);
     collection = mongoDatabase.getCollection('Currencies') as unknown as Collection<CurrencyEntity>;
   });
 

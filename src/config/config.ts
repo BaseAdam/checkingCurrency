@@ -7,7 +7,7 @@ export class Config {
   }
 
   public getDatabaseUri(): string {
-    return process.env['DATABASE_URI'] || 'mongodb://localhost:27017';
+    return process.env['DATABASE_URI'] || 'mongodb://0.0.0.0:27017';
   }
 
   public getPort(): number {

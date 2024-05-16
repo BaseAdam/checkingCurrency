@@ -10,6 +10,17 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    services:
+      mongodb:
+        image: mongo:latest
+        ports:
+          - 27017:27017
+        options: >-
+          --health-cmd mongo
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     strategy:
       matrix:
         node-version: ['20.x']
@@ -31,6 +42,13 @@ jobs:
 
       - name: Fix lint
         run: npm run lint:fix
+
+      - name: Start MongoDB
+        uses: MongoCamp/mongodb-github-action@1.0.0
+        with:
+          mongodb-version: ${{ matrix.mongodb-version }}
+
+      - run: curl mongodb://0.0.0.0:27017
 
       - name: Test and coverage
         run: npm run coverage
