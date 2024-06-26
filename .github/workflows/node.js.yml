@@ -19,8 +19,6 @@ jobs:
           MONGO_INITDB_DATABASE: APP-DATABASE
         ports:
           - 27017:27017
-      container:
-        image: composer:latest
 
     strategy:
       matrix:
@@ -37,9 +35,6 @@ jobs:
 
       - name: Install dependancies
         run: npm install
-
-      - name: Install composer
-        run: composer install
 
       - name: Install mongosh
         run: |
@@ -64,8 +59,8 @@ jobs:
       - name: Fix lint
         run: npm run lint:fix
 
-      - name: Test and coverage
-        run: npm run coverage
+      - name: Test
+        run: npm run test:unit
 
       - name: SonarCloud Scan
         uses: sonarsource/sonarcloud-github-action@master
