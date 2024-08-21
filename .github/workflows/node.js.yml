@@ -38,9 +38,6 @@ jobs:
       - name: Install dependancies
         run: npm install
 
-      - name: Install composer
-        run: composer install
-
       - name: Install mongosh
         run: |
           sudo apt-get install gnupg
