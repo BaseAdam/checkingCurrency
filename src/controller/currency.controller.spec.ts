@@ -1,8 +1,9 @@
 import { CurrencyService } from '../service/currency.service';
 import { CurrencyController } from './currency.controller';
 import { instance, mock, when } from 'ts-mockito';
-import { ComparisonRate, Currency, ExchangeRate } from '../repository/currency.repository';
+import { ComparisonRate, ExchangeRate } from '../repository/currency.repository';
 import { Request, Response } from 'express';
+import { Currency } from '../middleware/middleware';
 
 describe('currency controller - unit test', () => {
   let currencyController: CurrencyController;

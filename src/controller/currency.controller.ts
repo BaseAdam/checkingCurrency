@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
 import 'reflect-metadata';
 import { CurrencyService } from '../service/currency.service';
-import { Currency } from '../repository/currency.repository';
 import { injectable, inject } from 'inversify';
+import { Currency } from '../middleware/middleware';
 
 @injectable()
 export class CurrencyController {

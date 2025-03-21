@@ -1,7 +1,7 @@
 import { ComparisonRate, CurrencyEntity, CurrencyRepository, ExchangeRate } from './currency.repository';
 import { when, instance, mock, anything } from 'ts-mockito';
-import { Currency } from './currency.repository';
 import { Collection, FindCursor, ObjectId, WithId } from 'mongodb';
+import { Currency } from '../middleware/middleware';
 
 describe('currency repository - unit test', () => {
   let currencyRepository: CurrencyRepository;

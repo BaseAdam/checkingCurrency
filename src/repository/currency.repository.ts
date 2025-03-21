@@ -1,8 +1,8 @@
-import { Currency } from '../middleware/middleware';
 import { Collection } from 'mongodb';
 import dotenv from 'dotenv';
 import { inject, injectable } from 'inversify';
 import 'reflect-metadata';
+import { Currency } from '../middleware/middleware';
 
 dotenv.config();
 
