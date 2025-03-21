@@ -1,42 +1,14 @@
-import { ValidationMiddlewareFunc } from '../middleware/middleware';
+import { Currency } from '../middleware/middleware';
 import { Collection } from 'mongodb';
 import dotenv from 'dotenv';
 import { inject, injectable } from 'inversify';
 import 'reflect-metadata';
-import { z } from 'zod';
 
 dotenv.config();
-
-export enum Currency {
-  USD = 'USD',
-  PLN = 'PLN',
-  EUR = 'EUR',
-  GBP = 'GBP',
-  CHF = 'CHF',
-}
-const currencySchema = z.nativeEnum(Currency);
 
 export type ExchangeRate = { currency: Currency; exchangeRate: number };
 export type ComparisonRate = { exchangeRate: number };
 export type CurrencyEntity = { name: string; rates: Record<string, number> };
-
-export const validateCurrency: ValidationMiddlewareFunc = ({ params }): void => {
-  try {
-    currencySchema.parse(params.currency);
-  } catch (e) {
-    throw new Error('Currency not found');
-  }
-};
-
-export const validateCurrencyInQueryIfExists: ValidationMiddlewareFunc = ({ query }): void => {
-  if (query.compare_to) {
-    try {
-      currencySchema.parse(query.compare_to);
-    } catch (e) {
-      throw new Error('Currency not found');
-    }
-  }
-};
 
 @injectable()
 export class CurrencyRepository {
