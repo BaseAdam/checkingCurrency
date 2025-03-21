@@ -1,7 +1,6 @@
 import { inject, injectable } from 'inversify';
 import { CurrencyController } from '../controller/currency.controller';
-import { ValidationMiddlewareFactory } from '../middleware/middleware';
-import { validateCurrency, validateCurrencyInQueryIfExists } from '../repository/currency.repository';
+import { validateCurrency, validateCurrencyInQueryIfExists, ValidationMiddlewareFactory } from '../middleware/middleware';
 import { Router } from 'express';
 import 'reflect-metadata';
 
