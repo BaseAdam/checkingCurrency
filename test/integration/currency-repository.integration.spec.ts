@@ -1,7 +1,8 @@
 import { GenericContainer, StartedTestContainer } from 'testcontainers';
 import { Collection } from 'mongodb';
 import { MongoDatabase } from '../../src/mongo-database';
-import { ComparisonRate, Currency, CurrencyEntity, CurrencyRepository, ExchangeRate } from '../../src/repository/currency.repository';
+import { ComparisonRate, CurrencyEntity, CurrencyRepository, ExchangeRate } from '../../src/repository/currency.repository';
+import { Currency } from '../../src/middleware/middleware';
 
 describe('Currency Repository Integration Test', () => {
   const mainCurrency = Currency.USD;
