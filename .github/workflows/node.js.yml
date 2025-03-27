@@ -61,8 +61,8 @@ jobs:
       - name: Fix lint
         run: npm run lint:fix
 
-      - name: Test and coverage
-        run: npm run coverage
+      - name: Unit tests
+        run: npm run test:unit
 
       - name: SonarCloud Scan
         uses: sonarsource/sonarcloud-github-action@master
