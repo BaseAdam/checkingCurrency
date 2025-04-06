@@ -2,7 +2,7 @@ import { Collection } from 'mongodb';
 import dotenv from 'dotenv';
 import { inject, injectable } from 'inversify';
 import 'reflect-metadata';
-import { Currency } from '../utils/currencies';
+import { Currency } from '../types/currencies';
 
 dotenv.config();
 

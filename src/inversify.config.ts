@@ -16,7 +16,7 @@ container.bind(Config).toSelf().inSingletonScope();
 container.bind(ValidationMiddlewareFactory).toSelf();
 container.bind(Routes).toSelf().inSingletonScope();
 container.bind(CurrencyUpdateMiddleware).toSelf();
-container.bind('CURRENCY_API_KEY').toConstantValue(process.env.CURRENCY_API_KEY || '');
+container.bind('CURRENCY_API_KEY').toConstantValue(process.env.CURRENCY_API_KEY ?? '');
 container
   .bind(MongoDatabase)
   .toDynamicValue(async ({ container }) => {

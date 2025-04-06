@@ -1,7 +1,7 @@
 import { injectable, inject } from 'inversify';
 import { ComparisonRate, CurrencyRepository, ExchangeRate } from '../repository/currency.repository';
 import 'reflect-metadata';
-import { Currency } from '../utils/currencies';
+import { Currency } from '../types/currencies';
 
 @injectable()
 export class CurrencyService {

@@ -3,7 +3,8 @@ import { CurrencyController } from '../controller/currency.controller';
 import { Router } from 'express';
 import 'reflect-metadata';
 import { CurrencyUpdateMiddleware, ValidationMiddlewareFactory } from '../middleware/middleware';
-import { Currency, validateCurrency, validateCurrencyInQueryIfExists } from '../utils/currencies';
+import { Currency } from '../types/currencies';
+import { validateCurrency, validateCurrencyInQueryIfExists } from '../utils/validateCurrencies';
 
 @injectable()
 export class Routes {

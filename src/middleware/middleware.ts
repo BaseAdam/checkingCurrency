@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { IncomingHttpHeaders } from 'http';
 import { inject, injectable } from 'inversify';
 import 'reflect-metadata';
-import { Currency, supportedCurrencies } from '../utils/currencies';
+import { Currency, supportedCurrencies } from '../types/currencies';
 import { CurrencyEntity } from '../repository/currency.repository';
 import { Collection } from 'mongodb';
 
@@ -13,7 +13,7 @@ export type ValidationMiddlewareFunc = (data: {
   query: Record<string, unknown>;
 }) => void;
 
-type CurrencyExternalApiResponse = { conversion_rates: Record<string, number> };
+export type CurrencyExternalApiResponse = { conversion_rates: Record<string, number> };
 
 @injectable()
 export class ValidationMiddlewareFactory {
@@ -40,8 +40,8 @@ export class ValidationMiddlewareFactory {
 @injectable()
 export class CurrencyUpdateMiddleware {
   constructor(
-    @inject('CURRENCY_API_KEY') private apiKey: string,
-    @inject('CollectionCurrency') private collection: Collection<CurrencyEntity>,
+    @inject('CURRENCY_API_KEY') private readonly apiKey: string,
+    @inject('CollectionCurrency') private readonly collection: Collection<CurrencyEntity>,
   ) {}
 
   private async fetchLatestRates(baseCurrency: Currency): Promise<CurrencyEntity> {

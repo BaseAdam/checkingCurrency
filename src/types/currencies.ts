@@ -1,6 +1,3 @@
-import { z } from 'zod';
-import { ValidationMiddlewareFunc } from '../middleware/middleware';
-
 export const supportedCurrencies = [
   'AED',
   'AFN',
@@ -328,23 +325,3 @@ export enum Currency {
   ZMW = 'ZMW',
   ZWL = 'ZWL',
 }
-
-export const currencySchema = z.nativeEnum(Currency);
-
-export const validateCurrencyInQueryIfExists: ValidationMiddlewareFunc = ({ query }): void => {
-  if (query.compare_to) {
-    try {
-      currencySchema.parse(query.compare_to);
-    } catch (e) {
-      throw new Error('Currency not found');
-    }
-  }
-};
-
-export const validateCurrency: ValidationMiddlewareFunc = ({ params }): void => {
-  try {
-    currencySchema.parse(params.currency);
-  } catch (e) {
-    throw new Error('Currency not found');
-  }
-};
