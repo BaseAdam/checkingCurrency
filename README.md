@@ -22,7 +22,7 @@ NOTE: Configuration File with Currencies and exchange rates
 - [x] Setup Sonarcube
 - [x] Store currencies in database
 - [x] Use DI framework
-- [ ] Use validation library
+- [x] Use validation library
 - [ ] Call some external service to get the currency info
 - [ ] Reduce number of requests to external service
 - [ ] Generate OpenApi documentation
