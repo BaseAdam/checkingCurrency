@@ -2,14 +2,13 @@ import { Collection } from 'mongodb';
 import dotenv from 'dotenv';
 import { inject, injectable } from 'inversify';
 import 'reflect-metadata';
-import { Currency } from '../middleware/middleware';
+import { Currency } from '../utils/currencies';
 
 dotenv.config();
 
 export type ExchangeRate = { currency: Currency; exchangeRate: number };
 export type ComparisonRate = { exchangeRate: number };
-export type CurrencyEntity = { name: string; rates: Record<string, number> };
-
+export type CurrencyEntity = { name: string; rates: Record<string, number>; lastUpdated: Date };
 @injectable()
 export class CurrencyRepository {
   constructor(@inject('CollectionCurrency') private collection: Collection<CurrencyEntity>) {}

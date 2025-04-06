@@ -1,16 +1,10 @@
 import { NextFunction, Request, Response } from 'express';
 import { IncomingHttpHeaders } from 'http';
-import { injectable } from 'inversify';
+import { inject, injectable } from 'inversify';
 import 'reflect-metadata';
-import { z } from 'zod';
-
-export enum Currency {
-  USD = 'USD',
-  PLN = 'PLN',
-  EUR = 'EUR',
-  GBP = 'GBP',
-  CHF = 'CHF',
-}
+import { Currency, supportedCurrencies } from '../utils/currencies';
+import { CurrencyEntity } from '../repository/currency.repository';
+import { Collection } from 'mongodb';
 
 export type ValidationMiddlewareFunc = (data: {
   body: unknown;
@@ -19,7 +13,8 @@ export type ValidationMiddlewareFunc = (data: {
   query: Record<string, unknown>;
 }) => void;
 
-export const currencySchema = z.nativeEnum(Currency);
+type CurrencyExternalApiResponse = { conversion_rates: Record<string, number> };
+
 @injectable()
 export class ValidationMiddlewareFactory {
   public getMiddleware(validate: ValidationMiddlewareFunc) {
@@ -42,20 +37,69 @@ export class ValidationMiddlewareFactory {
   }
 }
 
-export const validateCurrencyInQueryIfExists: ValidationMiddlewareFunc = ({ query }): void => {
-  if (query.compare_to) {
+@injectable()
+export class CurrencyUpdateMiddleware {
+  constructor(
+    @inject('CURRENCY_API_KEY') private apiKey: string,
+    @inject('CollectionCurrency') private collection: Collection<CurrencyEntity>,
+  ) {}
+
+  private async fetchLatestRates(baseCurrency: Currency): Promise<CurrencyEntity> {
+    const response = await fetch(`https://v6.exchangerate-api.com/v6/${this.apiKey}/latest/${baseCurrency}`);
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch exchange rates: ${response.statusText}`);
+    }
+
+    const data: CurrencyExternalApiResponse = (await response.json()) as CurrencyExternalApiResponse;
+    return {
+      name: baseCurrency,
+      rates: data.conversion_rates,
+      lastUpdated: new Date(),
+    };
+  }
+
+  private needsUpdate(lastUpdated: Date): boolean {
+    const oneDay = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+    const now = new Date();
+    return !lastUpdated || now.getTime() - lastUpdated.getTime() > oneDay;
+  }
+
+  public async updateCurrencyRates(baseCurrency?: Currency): Promise<void> {
     try {
-      currencySchema.parse(query.compare_to);
-    } catch (e) {
-      throw new Error('Currency not found');
+      if (baseCurrency) {
+        // Update single currency
+        await this.updateSingleCurrency(baseCurrency);
+        return;
+      }
+
+      // Update all currencies
+      const existingCurrencies = await this.collection.find().toArray();
+      const existingMap = new Map(existingCurrencies.map((currency) => [currency.name, currency]));
+
+      for (const currency of supportedCurrencies) {
+        const existing = existingMap.get(currency);
+
+        if (existing && !this.needsUpdate(existing.lastUpdated)) {
+          continue; // Skip if less than 24 hours old
+        }
+
+        const latestRates = await this.fetchLatestRates(currency as Currency);
+        await this.collection.updateOne({ name: currency }, { $set: latestRates }, { upsert: true });
+      }
+    } catch (error) {
+      throw new Error(`Failed to update currency rates: ${error}`);
     }
   }
-};
 
-export const validateCurrency: ValidationMiddlewareFunc = ({ params }): void => {
-  try {
-    currencySchema.parse(params.currency);
-  } catch (e) {
-    throw new Error('Currency not found');
+  private async updateSingleCurrency(currency: Currency): Promise<void> {
+    const existing = await this.collection.findOne({ name: currency });
+
+    if (existing && !this.needsUpdate(existing.lastUpdated)) {
+      return; // Skip update if less than 24 hours old
+    }
+
+    const latestRates = await this.fetchLatestRates(currency);
+    await this.collection.updateOne({ name: currency }, { $set: latestRates }, { upsert: true });
   }
-};
+}

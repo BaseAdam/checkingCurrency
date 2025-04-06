@@ -1,5 +1,5 @@
-import { Currency } from '../middleware/middleware';
 import { ComparisonRate, CurrencyRepository, ExchangeRate } from '../repository/currency.repository';
+import { Currency } from '../utils/currencies';
 import { CurrencyService } from './currency.service';
 import { mock, when, instance } from 'ts-mockito';
 

@@ -23,8 +23,8 @@ NOTE: Configuration File with Currencies and exchange rates
 - [x] Store currencies in database
 - [x] Use DI framework
 - [x] Use validation library
-- [ ] Call some external service to get the currency info
-- [ ] Reduce number of requests to external service
+- [x] Call some external service to get the currency info
+- [x] Reduce number of requests to external service
 - [ ] Generate OpenApi documentation
 - [ ] Containerize application
 - [ ] Create logging and monitoring for the application
