@@ -1,8 +1,8 @@
 import { GenericContainer, StartedTestContainer } from 'testcontainers';
 import { Collection } from 'mongodb';
 import { MongoDatabase } from '../../src/mongo-database';
-import { ComparisonRate, CurrencyEntity, CurrencyRepository, ExchangeRate } from '../../src/repository/currency.repository';
-import { Currency } from '../../src/middleware/middleware';
+import { CurrencyEntity, CurrencyRepository } from '../../src/repository/currency.repository';
+import { Currency, supportedCurrencies } from '../../src/types/currencies';
 
 describe('Currency Repository Integration Test', () => {
   const mainCurrency = Currency.USD;
@@ -20,45 +20,63 @@ describe('Currency Repository Integration Test', () => {
 
   it('should return values from db', async () => {
     // given
-    const currencyNames = ['USD', 'PLN', 'EUR', 'GBP', 'CHF'];
     const currencyRepository = new CurrencyRepository(collection);
 
     // when
     const result = await currencyRepository.getAllCurrencies();
 
     // expect Currency array using jest matchers
-    expect(result).toEqual(currencyNames);
+    expect(result).toEqual(supportedCurrencies);
   });
 
   it('should return exchange rate of given currency', async () => {
     // given
-    const exchangeRates: ExchangeRate[] = [
-      { currency: Currency.PLN, exchangeRate: 3.77 },
-      { currency: Currency.EUR, exchangeRate: 0.89 },
-      { currency: Currency.GBP, exchangeRate: 0.79 },
-      { currency: Currency.CHF, exchangeRate: 0.99 },
-    ];
+    await collection.updateOne(
+      { name: Currency.USD },
+      {
+        $set: {
+          rates: {
+            [Currency.CHF]: 0.91,
+            [Currency.EUR]: 0.85,
+          },
+        },
+      },
+    );
+
     const currencyRepository = new CurrencyRepository(collection);
+
     // when
     const result = await currencyRepository.getCurrencyChangeRate(mainCurrency);
 
-    // expect Currency array using jest matchers
-    expect(result).toStrictEqual(exchangeRates);
+    // then
+    expect(result).toStrictEqual([
+      { currency: Currency.CHF, exchangeRate: 0.91 },
+      { currency: Currency.EUR, exchangeRate: 0.85 },
+    ]);
   });
 
   it('should return exchange rate of currency comparison', async () => {
-    //given
-    const exchangeRate: ComparisonRate[] = [{ exchangeRate: 0.99 }];
+    // given
+    await collection.updateOne(
+      { name: Currency.USD },
+      {
+        $set: {
+          rates: {
+            [Currency.CHF]: 0.91,
+            [Currency.EUR]: 0.85,
+          },
+        },
+      },
+    );
+
     const currencyRepository = new CurrencyRepository(collection);
-    //when
+
+    // when
     const result = await currencyRepository.getCurrencyComparison(mainCurrency, currencyToCompare);
 
-    //then
-    expect([result]).toStrictEqual(exchangeRate);
-  });
-
-  afterAll(async () => {
-    await mongoDatabase.stop();
-    await mongoContainer.stop();
+    // then
+    expect(result).toStrictEqual({
+      exchangeRate: 0.91,
+    });
   });
 });
