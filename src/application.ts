@@ -6,6 +6,7 @@ import { container } from './inversify.config';
 import { MongoDatabase } from './mongo-database';
 import { Routes } from './routes/routes';
 import { Config } from './config/config';
+import { swaggerSpec, swaggerUi } from './swagger';
 
 export class Application {
   constructor(
@@ -16,6 +17,7 @@ export class Application {
   ) {
     const currencyRouter = this.routes.registerRoutes();
     app.use('/api', currencyRouter);
+    app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
   }
 
   public static async start(): Promise<Application> {
