@@ -1,6 +1,6 @@
 import { inject, injectable } from 'inversify';
-import { CurrencyEntity } from '../repository/currency.repository';
 import { Currency } from '../types/currencies';
+import { CurrencyEntity } from '../types/exchangeRates';
 
 export type CurrencyExternalApiResponse = { conversion_rates: Record<string, number> };
 

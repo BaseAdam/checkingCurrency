@@ -1,9 +1,10 @@
 import { GenericContainer, StartedTestContainer } from 'testcontainers';
 import { Collection } from 'mongodb';
 import { MongoDatabase } from '../../src/mongo-database';
-import { CurrencyEntity, CurrencyRepository } from '../../src/repository/currency.repository';
+import { CurrencyRepository } from '../../src/repository/currency.repository';
 import { Currency, supportedCurrencies } from '../../src/types/currencies';
 import { CurrencyAdapter } from '../../src/acl/currencies.adapter';
+import { CurrencyEntity } from '../../src/types/exchangeRates';
 
 describe('Currency Repository Integration Test', () => {
   const mainCurrency = Currency.USD;

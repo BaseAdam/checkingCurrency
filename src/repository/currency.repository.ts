@@ -4,18 +4,15 @@ import { inject, injectable } from 'inversify';
 import 'reflect-metadata';
 import { Currency, supportedCurrencies } from '../types/currencies';
 import { CurrencyAdapter } from '../acl/currencies.adapter';
+import { ComparisonRate, CurrencyEntity, ExchangeRate } from '../types/exchangeRates';
 
 dotenv.config();
-
-export type ExchangeRate = { currency: Currency; exchangeRate: number };
-export type ComparisonRate = { exchangeRate: number };
-export type CurrencyEntity = { name: string; rates: Record<string, number> };
 
 @injectable()
 export class CurrencyRepository {
   constructor(
-    @inject('CollectionCurrency') private collection: Collection<CurrencyEntity>,
-    @inject(CurrencyAdapter) private currencyAdapter: CurrencyAdapter,
+    @inject('CollectionCurrency') private readonly collection: Collection<CurrencyEntity>,
+    @inject(CurrencyAdapter) private readonly currencyAdapter: CurrencyAdapter,
   ) {}
 
   public async getAllCurrencies(): Promise<string[]> {

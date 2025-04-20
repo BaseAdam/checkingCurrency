@@ -4,7 +4,7 @@ import { inject, injectable } from 'inversify';
 
 @injectable()
 export class Scheduler {
-  constructor(@inject(CurrencyService) private currencyService: CurrencyService) {}
+  constructor(@inject(CurrencyService) private readonly currencyService: CurrencyService) {}
 
   public async fetchCurrencyRates(): Promise<void> {
     // Schedule a job to run every hour
