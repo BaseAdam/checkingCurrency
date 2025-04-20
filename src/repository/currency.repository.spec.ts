@@ -2,26 +2,29 @@ import { ComparisonRate, CurrencyEntity, CurrencyRepository, ExchangeRate } from
 import { when, instance, mock, anything } from 'ts-mockito';
 import { Collection, FindCursor, ObjectId, WithId } from 'mongodb';
 import { Currency } from '../types/currencies';
+import { CurrencyAdapter } from '../acl/currencies.adapter';
 
 describe('currency repository - unit test', () => {
   let currencyRepository: CurrencyRepository;
+  let adapterMock: CurrencyAdapter;
   let collectionMock: Collection<CurrencyEntity>;
   let findCursorMock: FindCursor<WithId<CurrencyEntity>>;
   let idMock: ObjectId;
 
   beforeEach(() => {
     collectionMock = mock(Collection<CurrencyEntity>);
+    adapterMock = mock(CurrencyAdapter);
     findCursorMock = mock(instance(FindCursor<CurrencyEntity>));
     idMock = mock(ObjectId);
-    currencyRepository = new CurrencyRepository(instance(collectionMock));
+    currencyRepository = new CurrencyRepository(instance(collectionMock), instance(adapterMock));
   });
 
   it('should return values from db', async () => {
     //given
     const currencyNames = ['USD', 'PLN'];
     const currencyEntity: WithId<CurrencyEntity>[] = [
-      { _id: idMock, name: 'USD', rates: { PLN: 3.77, EUR: 0.89, GBP: 0.79, CHF: 0.99 }, lastUpdated: new Date() },
-      { _id: idMock, name: 'PLN', rates: { USD: 0.27, EUR: 0.24, GBP: 0.21, CHF: 0.26 }, lastUpdated: new Date() },
+      { _id: idMock, name: 'USD', rates: { PLN: 3.77, EUR: 0.89, GBP: 0.79, CHF: 0.99 } },
+      { _id: idMock, name: 'PLN', rates: { USD: 0.27, EUR: 0.24, GBP: 0.21, CHF: 0.26 } },
     ];
     when(findCursorMock.toArray()).thenResolve(currencyEntity);
     when(collectionMock.find()).thenReturn(instance(findCursorMock));
@@ -39,7 +42,6 @@ describe('currency repository - unit test', () => {
       _id: idMock,
       name: 'USD',
       rates: { PLN: 3.77, EUR: 0.89, GBP: 0.79, CHF: 0.99 },
-      lastUpdated: new Date(),
     };
     const exchangeRates: ExchangeRate[] = [
       { currency: Currency.PLN, exchangeRate: 3.77 },
@@ -64,7 +66,6 @@ describe('currency repository - unit test', () => {
       _id: idMock,
       name: 'USD',
       rates: { PLN: 3.77, EUR: 0.89, GBP: 0.79, CHF: 0.99 },
-      lastUpdated: new Date(),
     };
     when(collectionMock.findOne(anything())).thenResolve(currencyEntity);
     //when

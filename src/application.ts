@@ -6,6 +6,7 @@ import { container } from './inversify.config';
 import { MongoDatabase } from './mongo-database';
 import { Routes } from './routes/routes';
 import { Config } from './config/config';
+import { Scheduler } from './jobs/fetchRatesJob';
 
 export class Application {
   constructor(
@@ -20,6 +21,8 @@ export class Application {
 
   public static async start(): Promise<Application> {
     const config = container.get(Config);
+    const cronJob: Scheduler = await container.getAsync(Scheduler);
+    await cronJob.fetchCurrencyRates();
 
     const app = express();
     app.use('/assets', express.static(path.join(__dirname, 'assets')));

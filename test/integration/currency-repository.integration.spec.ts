@@ -3,6 +3,7 @@ import { Collection } from 'mongodb';
 import { MongoDatabase } from '../../src/mongo-database';
 import { CurrencyEntity, CurrencyRepository } from '../../src/repository/currency.repository';
 import { Currency, supportedCurrencies } from '../../src/types/currencies';
+import { CurrencyAdapter } from '../../src/acl/currencies.adapter';
 
 describe('Currency Repository Integration Test', () => {
   const mainCurrency = Currency.USD;
@@ -10,17 +11,19 @@ describe('Currency Repository Integration Test', () => {
   let mongoContainer: StartedTestContainer;
   let mongoDatabase: MongoDatabase;
   let collection: Collection<CurrencyEntity>;
+  let adapter: CurrencyAdapter;
 
   beforeAll(async () => {
     mongoContainer = await new GenericContainer('mongo').withExposedPorts(27017).start();
     const uri = `mongodb://localhost:${mongoContainer.getMappedPort(27017)}`;
     mongoDatabase = await MongoDatabase.start(uri);
     collection = mongoDatabase.getCollection('Currencies') as unknown as Collection<CurrencyEntity>;
+    adapter = new CurrencyAdapter(process.env.CURRENCY_API_KEY ?? '');
   });
 
   it('should return values from db', async () => {
     // given
-    const currencyRepository = new CurrencyRepository(collection);
+    const currencyRepository = new CurrencyRepository(collection, adapter);
 
     // when
     const result = await currencyRepository.getAllCurrencies();
@@ -43,7 +46,7 @@ describe('Currency Repository Integration Test', () => {
       },
     );
 
-    const currencyRepository = new CurrencyRepository(collection);
+    const currencyRepository = new CurrencyRepository(collection, adapter);
 
     // when
     const result = await currencyRepository.getCurrencyChangeRate(mainCurrency);
@@ -69,7 +72,7 @@ describe('Currency Repository Integration Test', () => {
       },
     );
 
-    const currencyRepository = new CurrencyRepository(collection);
+    const currencyRepository = new CurrencyRepository(collection, adapter);
 
     // when
     const result = await currencyRepository.getCurrencyComparison(mainCurrency, currencyToCompare);

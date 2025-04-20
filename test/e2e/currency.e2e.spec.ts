@@ -1,7 +1,7 @@
-import { CurrencyExternalApiResponse } from '../../src/middleware/middleware';
 import { supportedCurrencies } from '../../src/types/currencies';
 import { ApiCalls } from './utils/ApiCalls';
 import { TestApplication } from './utils/TestApplication';
+import { CurrencyExternalApiResponse } from '../../src/acl/currencies.adapter';
 
 describe('Currency E2E Test', () => {
   let apiCalls: ApiCalls;
@@ -26,6 +26,14 @@ describe('Currency E2E Test', () => {
 
     // then
     expect(result).toEqual(expect.arrayContaining(supportedCurrencies));
+  });
+
+  it('should return exchange rates of currency', async () => {
+    //when
+    const result = await apiCalls.getExchangeRate();
+
+    //then
+    expect(result).toEqual({ exchangeRates: [{ currency: 'USD', exchangeRate: currencyData.conversion_rates }] });
   });
 
   it('should return exchange rate of currency comparison', async () => {

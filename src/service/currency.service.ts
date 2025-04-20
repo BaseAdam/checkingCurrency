@@ -22,4 +22,8 @@ export class CurrencyService {
 
     return this.currencyRepository.getCurrencyComparison(currency, currencyToCompare);
   }
+
+  public async updateExchangeRates(): Promise<void> {
+    await this.currencyRepository.updateCurrencyRates();
+  }
 }
