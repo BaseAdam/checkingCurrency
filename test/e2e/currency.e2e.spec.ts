@@ -1,13 +1,19 @@
+import { supportedCurrencies } from '../../src/types/currencies';
 import { ApiCalls } from './utils/ApiCalls';
 import { TestApplication } from './utils/TestApplication';
+import { CurrencyExternalApiResponse } from '../../src/acl/currencies.adapter';
 
 describe('Currency E2E Test', () => {
   let apiCalls: ApiCalls;
   let testApp: TestApplication;
+  let currencyData: CurrencyExternalApiResponse;
 
   beforeAll(async () => {
     testApp = await TestApplication.start();
     apiCalls = new ApiCalls(testApp.getBasePath());
+    //fetch latest rates from external API to get proper values
+    const response = await fetch(`https://v6.exchangerate-api.com/v6/${process.env.CURRENCY_API_KEY ?? ''}/latest/USD`);
+    currencyData = (await response.json()) as CurrencyExternalApiResponse;
   });
 
   afterAll(async () => {
@@ -19,22 +25,15 @@ describe('Currency E2E Test', () => {
     const result = await apiCalls.getCurrencies();
 
     // then
-    expect(result).toEqual(['USD', 'PLN', 'EUR', 'GBP', 'CHF']);
+    expect(result).toEqual(expect.arrayContaining(supportedCurrencies));
   });
 
-  it('should return exchange rate of a given currency', async () => {
-    // when
+  it('should return exchange rates of currency', async () => {
+    //when
     const result = await apiCalls.getExchangeRate();
 
-    // then
-    expect(result).toEqual({
-      exchangeRates: [
-        { currency: 'PLN', exchangeRate: 3.77 },
-        { currency: 'EUR', exchangeRate: 0.89 },
-        { currency: 'GBP', exchangeRate: 0.79 },
-        { currency: 'CHF', exchangeRate: 0.99 },
-      ],
-    });
+    //then
+    expect(result).toEqual({ exchangeRates: [{ currency: 'USD', exchangeRate: currencyData.conversion_rates }] });
   });
 
   it('should return exchange rate of currency comparison', async () => {
@@ -42,6 +41,6 @@ describe('Currency E2E Test', () => {
     const result = await apiCalls.getCurrencyComparison();
 
     //then
-    expect(result).toEqual({ exchangeRate: 0.89 });
+    expect(result).toEqual({ exchangeRate: currencyData.conversion_rates.EUR });
   });
 });

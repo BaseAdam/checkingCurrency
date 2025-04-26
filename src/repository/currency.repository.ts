@@ -2,17 +2,18 @@ import { Collection } from 'mongodb';
 import dotenv from 'dotenv';
 import { inject, injectable } from 'inversify';
 import 'reflect-metadata';
-import { Currency } from '../middleware/middleware';
+import { Currency, supportedCurrencies } from '../types/currencies';
+import { CurrencyAdapter } from '../acl/currencies.adapter';
+import { ComparisonRate, CurrencyEntity, ExchangeRate } from '../types/exchangeRates';
 
 dotenv.config();
 
-export type ExchangeRate = { currency: Currency; exchangeRate: number };
-export type ComparisonRate = { exchangeRate: number };
-export type CurrencyEntity = { name: string; rates: Record<string, number> };
-
 @injectable()
 export class CurrencyRepository {
-  constructor(@inject('CollectionCurrency') private collection: Collection<CurrencyEntity>) {}
+  constructor(
+    @inject('CollectionCurrency') private readonly collection: Collection<CurrencyEntity>,
+    @inject(CurrencyAdapter) private readonly currencyAdapter: CurrencyAdapter,
+  ) {}
 
   public async getAllCurrencies(): Promise<string[]> {
     const currencies = await this.collection.find().toArray();
@@ -43,5 +44,17 @@ export class CurrencyRepository {
     }
 
     return { exchangeRate };
+  }
+
+  public async updateCurrencyRates(): Promise<void> {
+    try {
+      // Update all currencies
+      for (const currency of supportedCurrencies) {
+        const latestRates = await this.currencyAdapter.fetchLatestRates(currency as Currency);
+        await this.collection.updateOne({ name: currency }, { $set: latestRates }, { upsert: true });
+      }
+    } catch (error) {
+      throw new Error(`Failed to update currency rates: ${error}`);
+    }
   }
 }

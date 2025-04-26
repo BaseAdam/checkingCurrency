@@ -1,6 +1,6 @@
 import axios, { Axios } from 'axios';
-import { ComparisonRate, ExchangeRate } from '../../../src/repository/currency.repository';
-import { Currency } from '../../../src/middleware/middleware';
+import { Currency } from '../../../src/types/currencies';
+import { ComparisonRate, ExchangeRate } from '../../../src/types/exchangeRates';
 
 export class ApiCalls {
   private readonly httpClient: Axios;

@@ -1,8 +1,9 @@
 import { inject, injectable } from 'inversify';
 import { CurrencyController } from '../controller/currency.controller';
-import { validateCurrency, validateCurrencyInQueryIfExists, ValidationMiddlewareFactory } from '../middleware/middleware';
 import { Router } from 'express';
 import 'reflect-metadata';
+import { ValidationMiddlewareFactory } from '../middleware/middleware';
+import { validateCurrency, validateCurrencyInQueryIfExists } from '../utils/validateCurrencies';
 
 @injectable()
 export class Routes {

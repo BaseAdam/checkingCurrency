@@ -7,6 +7,8 @@ import { MongoDatabase } from './mongo-database';
 import { CurrencyRepository } from './repository/currency.repository';
 import { Routes } from './routes/routes';
 import { CurrencyService } from './service/currency.service';
+import { Scheduler } from './jobs/fetchRatesJob';
+import { CurrencyAdapter } from './acl/currencies.adapter';
 
 const container = new Container();
 container.bind(CurrencyController).toSelf();
@@ -15,6 +17,9 @@ container.bind(CurrencyRepository).toSelf();
 container.bind(Config).toSelf().inSingletonScope();
 container.bind(ValidationMiddlewareFactory).toSelf();
 container.bind(Routes).toSelf().inSingletonScope();
+container.bind(Scheduler).toSelf();
+container.bind(CurrencyAdapter).toSelf();
+container.bind('CURRENCY_API_KEY').toConstantValue(process.env.CURRENCY_API_KEY ?? '');
 container
   .bind(MongoDatabase)
   .toDynamicValue(async ({ container }) => {

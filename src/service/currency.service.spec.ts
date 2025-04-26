@@ -1,7 +1,8 @@
-import { Currency } from '../middleware/middleware';
-import { ComparisonRate, CurrencyRepository, ExchangeRate } from '../repository/currency.repository';
+import { Currency } from '../types/currencies';
 import { CurrencyService } from './currency.service';
 import { mock, when, instance } from 'ts-mockito';
+import { CurrencyRepository } from '../repository/currency.repository';
+import { ComparisonRate, ExchangeRate } from '../types/exchangeRates';
 
 describe('currency service - unit test', () => {
   let currencyService: CurrencyService;

@@ -1,19 +1,23 @@
-import { ComparisonRate, CurrencyEntity, CurrencyRepository, ExchangeRate } from './currency.repository';
 import { when, instance, mock, anything } from 'ts-mockito';
 import { Collection, FindCursor, ObjectId, WithId } from 'mongodb';
-import { Currency } from '../middleware/middleware';
+import { Currency } from '../types/currencies';
+import { CurrencyAdapter } from '../acl/currencies.adapter';
+import { CurrencyRepository } from './currency.repository';
+import { ComparisonRate, CurrencyEntity, ExchangeRate } from '../types/exchangeRates';
 
 describe('currency repository - unit test', () => {
   let currencyRepository: CurrencyRepository;
+  let adapterMock: CurrencyAdapter;
   let collectionMock: Collection<CurrencyEntity>;
   let findCursorMock: FindCursor<WithId<CurrencyEntity>>;
   let idMock: ObjectId;
 
   beforeEach(() => {
     collectionMock = mock(Collection<CurrencyEntity>);
+    adapterMock = mock(CurrencyAdapter);
     findCursorMock = mock(instance(FindCursor<CurrencyEntity>));
     idMock = mock(ObjectId);
-    currencyRepository = new CurrencyRepository(instance(collectionMock));
+    currencyRepository = new CurrencyRepository(instance(collectionMock), instance(adapterMock));
   });
 
   it('should return values from db', async () => {
@@ -35,7 +39,11 @@ describe('currency repository - unit test', () => {
   it('should return exchange rate of given currency', async () => {
     //given
     const mainCurrency = Currency.USD;
-    const currencyEntity: WithId<CurrencyEntity> = { _id: idMock, name: 'USD', rates: { PLN: 3.77, EUR: 0.89, GBP: 0.79, CHF: 0.99 } };
+    const currencyEntity: WithId<CurrencyEntity> = {
+      _id: idMock,
+      name: 'USD',
+      rates: { PLN: 3.77, EUR: 0.89, GBP: 0.79, CHF: 0.99 },
+    };
     const exchangeRates: ExchangeRate[] = [
       { currency: Currency.PLN, exchangeRate: 3.77 },
       { currency: Currency.EUR, exchangeRate: 0.89 },
@@ -55,7 +63,11 @@ describe('currency repository - unit test', () => {
     const mainCurrency = Currency.USD;
     const currencyToCompare = Currency.EUR;
     const exchangeRate: ComparisonRate = { exchangeRate: 0.89 };
-    const currencyEntity: WithId<CurrencyEntity> = { _id: idMock, name: 'USD', rates: { PLN: 3.77, EUR: 0.89, GBP: 0.79, CHF: 0.99 } };
+    const currencyEntity: WithId<CurrencyEntity> = {
+      _id: idMock,
+      name: 'USD',
+      rates: { PLN: 3.77, EUR: 0.89, GBP: 0.79, CHF: 0.99 },
+    };
     when(collectionMock.findOne(anything())).thenResolve(currencyEntity);
     //when
     const result = await currencyRepository.getCurrencyComparison(mainCurrency, currencyToCompare);
