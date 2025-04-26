@@ -1,5 +1,5 @@
 import { inject, injectable } from 'inversify';
-import { Currency } from '../types/currencies';
+import { Currency, supportedCurrencies } from '../types/currencies';
 import { CurrencyEntity } from '../types/exchangeRates';
 import 'reflect-metadata';
 
@@ -17,9 +17,16 @@ export class CurrencyAdapter {
     }
 
     const data: CurrencyExternalApiResponse = (await response.json()) as CurrencyExternalApiResponse;
+    const supportedRates = Object.entries(data.conversion_rates)
+      .filter(([currency]) => supportedCurrencies.includes(currency as Currency))
+      .reduce((acc, [currency, rate]) => {
+        acc[currency] = rate;
+        return acc;
+      }, {} as Record<string, number>);
+
     return {
       name: baseCurrency,
-      rates: data.conversion_rates,
+      rates: supportedRates
     };
   }
 }
