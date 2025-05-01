@@ -38,7 +38,7 @@
     "axios": "1.7.4",
     "copyfiles": "2.4.1",
     "dotenv": "16.4.1",
-    "eslint": "8.57.0",
+    "eslint": "9.25.1",
     "eslint-config-prettier": "9.1.0",
     "eslint-plugin-prettier": "5.2.5",
     "inversify": "6.0.2",
